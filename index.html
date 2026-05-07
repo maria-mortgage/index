@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mortgage Calculator</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: #eef0f4;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 30px 16px;
+}
+.wrapper { width: 100%; max-width: 860px; }
+h1 {
+  font-size: 1.1rem; font-weight: 700; color: #1e3a5f;
+  margin-bottom: 14px; letter-spacing: 0.2px;
+}
+
+/* Tabs */
+.tabs { display: flex; gap: 0; margin-bottom: 0; }
+.tab {
+  padding: 10px 22px; font-size: 0.78rem; font-weight: 700;
+  letter-spacing: 0.8px; text-transform: uppercase; cursor: pointer;
+  border: none; border-radius: 8px 8px 0 0;
+  background: #d8dce6; color: #666;
+  transition: background 0.2s, color 0.2s;
+  display: flex; align-items: center; gap: 5px;
+}
+.tab.active { background: #f47920; color: #fff; }
+.tab .help {
+  width: 14px; height: 14px; border-radius: 50%;
+  background: rgba(255,255,255,0.35); font-size: 0.65rem;
+  display: inline-flex; align-items: center; justify-content: center; font-weight: 700;
+}
+.tab:not(.active) .help { background: rgba(0,0,0,0.12); color: #888; }
+
+/* Panel visibility */
+.panel { display: none; }
+.panel.active { display: grid; }
+
+/* Main layout */
+.main {
+  background: #fff;
+  border-radius: 0 12px 12px 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+.purchase-panel {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* Left: Form */
+.form-panel {
+  padding: 28px 28px 24px;
+  background: #fff;
+  border-right: 1px solid #eee;
+}
+.field { margin-bottom: 18px; }
+.field-label {
+  font-size: 0.78rem; font-weight: 600; color: #444;
+  margin-bottom: 6px; display: flex; align-items: center; gap: 4px;
+}
+.field-label .tip {
+  width: 14px; height: 14px; border-radius: 50%;
+  background: #c8cdd8; color: #fff; font-size: 0.6rem;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 700; cursor: help;
+}
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.input-wrap { position: relative; display: flex; align-items: center; }
+.input-wrap .pre, .input-wrap .suf {
+  position: absolute; font-size: 0.88rem; color: #888; pointer-events: none;
+}
+.input-wrap .pre { left: 11px; }
+.input-wrap .suf { right: 11px; }
+
+input[type="number"], select {
+  width: 100%; border: 1.5px solid #dde0e8; border-radius: 7px;
+  padding: 9px 36px 9px 28px; font-size: 0.92rem; color: #1a1a1a;
+  outline: none; background: #fff; -moz-appearance: textfield;
+  transition: border-color 0.2s;
+}
+input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+input[type="number"]:focus, select:focus { border-color: #f47920; }
+input.no-pre { padding-left: 11px; }
+input.no-suf { padding-right: 11px; }
+select {
+  padding: 9px 11px; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23aaa' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center; cursor: pointer;
+}
+.down-row { display: flex; align-items: center; gap: 8px; }
+.down-row .pct-wrap { flex: 0 0 90px; }
+.down-row .eq { color: #aaa; font-size: 1rem; flex-shrink: 0; }
+.down-row .amt-wrap { flex: 1; }
+.loc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.calc-btn {
+  display: block; margin: 24px auto 0; padding: 12px 48px;
+  background: #f47920; color: #fff; border: none; border-radius: 30px;
+  font-size: 1rem; font-weight: 700; cursor: pointer; letter-spacing: 0.3px;
+  transition: background 0.2s, transform 0.1s;
+}
+.calc-btn:hover { background: #e06a10; }
+.calc-btn:active { transform: scale(0.98); }
+.tos { text-align: center; font-size: 0.68rem; color: #bbb; margin-top: 10px; }
+.tos a { color: #f47920; text-decoration: none; }
+
+/* Right: Results */
+.result-panel { padding: 28px 28px 24px; background: #fff; }
+.monthly-section {
+  text-align: center; padding-bottom: 20px;
+  border-bottom: 1px solid #eee; margin-bottom: 20px;
+}
+.monthly-section .m-label {
+  font-size: 0.85rem; font-weight: 700; color: #1e3a5f;
+  margin-bottom: 6px; letter-spacing: 0.2px;
+}
+.monthly-section .m-amount {
+  font-size: 2.6rem; font-weight: 800; color: #1e3a5f; letter-spacing: -1px;
+}
+.monthly-section .m-freq { font-size: 0.75rem; color: #aaa; margin-top: 2px; }
+.result-section { margin-bottom: 20px; }
+.result-section:last-child { margin-bottom: 0; }
+.section-title {
+  font-size: 0.82rem; font-weight: 700; color: #1e3a5f;
+  margin-bottom: 10px; display: flex; align-items: center; gap: 4px;
+}
+.section-title .tip {
+  width: 14px; height: 14px; border-radius: 50%;
+  background: #c8cdd8; color: #fff; font-size: 0.6rem;
+  display: inline-flex; align-items: center; justify-content: center; font-weight: 700;
+}
+.result-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.82rem; margin-bottom: 6px;
+}
+.result-row:last-child { margin-bottom: 0; }
+.result-row .r-label { color: #888; }
+.result-row .r-val { font-weight: 700; color: #1e3a5f; }
+.result-row .r-val.orange { color: #f47920; }
+.result-row .r-val.total { font-size: 0.92rem; }
+.divider { height: 1px; background: #eee; margin: 14px 0; }
+.placeholder { text-align: center; color: #ccc; font-size: 0.85rem; padding: 40px 0; }
+.cmhc-note {
+  font-size: 0.72rem; color: #e07a20; background: #fff8f2;
+  border: 1px solid #f4d0b0; border-radius: 6px; padding: 7px 10px;
+  margin-top: 8px; display: none;
+}
+.cmhc-note.show { display: block; }
+
+/* ===== GDS/TDS Panel ===== */
+.gds-panel {
+  display: none;
+  grid-template-columns: 1fr 1fr;
+  padding: 28px;
+  gap: 28px;
+}
+.gds-panel.active { display: grid; }
+
+.gds-left, .gds-right { display: flex; flex-direction: column; gap: 16px; }
+
+.gds-section-title {
+  font-size: 0.85rem; font-weight: 700; color: #1e3a5f;
+  border-bottom: 2px solid #1e3a5f; padding-bottom: 6px; margin-bottom: 4px;
+}
+
+.gds-row {
+  display: grid; grid-template-columns: 1fr 120px; align-items: center; gap: 8px;
+}
+.gds-row label { font-size: 0.8rem; color: #444; font-weight: 600; }
+.gds-row .sub-label { font-size: 0.72rem; color: #888; margin-top: 1px; }
+
+.gds-input-wrap { position: relative; display: flex; align-items: center; }
+.gds-input-wrap .pre { position: absolute; left: 9px; font-size: 0.82rem; color: #888; pointer-events: none; }
+.gds-input-wrap input {
+  width: 100%; border: 1.5px solid #dde0e8; border-radius: 7px;
+  padding: 8px 8px 8px 22px; font-size: 0.9rem; color: #1a1a1a;
+  outline: none; background: #ffede0;
+  -moz-appearance: textfield; transition: border-color 0.2s;
+}
+.gds-input-wrap input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.gds-input-wrap input:focus { border-color: #f47920; }
+.gds-input-wrap input.plain { background: #fff; }
+
+.stress-note { font-size: 0.72rem; color: #888; margin-top: -10px; }
+
+/* Ratio result boxes */
+.ratio-box {
+  border: 1.5px solid #dde0e8; border-radius: 10px; padding: 14px 16px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.ratio-box .ratio-label { font-size: 0.85rem; font-weight: 700; color: #1e3a5f; }
+.ratio-box .ratio-val {
+  font-size: 1.5rem; font-weight: 800; color: #1e3a5f;
+  background: #c8f7c5; padding: 4px 14px; border-radius: 6px;
+}
+.ratio-box .ratio-val.warn { background: #ffe0b2; }
+.ratio-box .ratio-val.danger { background: #ffcdd2; }
+
+.td-note {
+  font-size: 0.75rem; color: #555; background: #f5f5f5;
+  border-radius: 8px; padding: 10px 12px; line-height: 1.6;
+}
+.td-note strong { color: #1e3a5f; }
+
+.gds-calc-btn {
+  display: block; margin: 4px auto 0; padding: 11px 40px;
+  background: #f47920; color: #fff; border: none; border-radius: 30px;
+  font-size: 0.95rem; font-weight: 700; cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+.gds-calc-btn:hover { background: #e06a10; }
+.gds-calc-btn:active { transform: scale(0.98); }
+
+@media (max-width: 620px) {
+  .purchase-panel, .gds-panel { grid-template-columns: 1fr; }
+  .form-panel { border-right: none; border-bottom: 1px solid #eee; }
+  .tab { padding: 9px 14px; font-size: 0.72rem; }
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <h1>Mortgage Calculator</h1>
+
+  <div class="tabs">
+    <button class="tab active" onclick="setTab('purchase', this)">PURCHASE <span class="help">?</span></button>
+    <button class="tab" onclick="setTab('gds', this)">GDS / TDS <span class="help">?</span></button>
+  </div>
+
+  <div class="main">
+
+    <!-- ===== PURCHASE PANEL ===== -->
+    <div id="panel-purchase" class="panel purchase-panel active">
+      <div class="form-panel">
+        <div class="grid2">
+          <div class="field">
+            <div class="field-label">Home Price <span class="tip" title="The total purchase price of the property.">?</span></div>
+            <div class="input-wrap">
+              <span class="pre">$</span>
+              <input type="number" id="price" value="800000" step="1000" class="no-suf" oninput="syncDown()">
+            </div>
+          </div>
+          <div class="field">
+            <div class="field-label">Interest Rate <span class="tip" title="Annual interest rate. Canada uses semi-annual compounding.">?</span></div>
+            <div class="input-wrap">
+              <input type="number" id="rate" value="4.2" step="0.05" min="0" max="30" class="no-pre">
+              <span class="suf">%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">Down Payment <span class="tip" title="Minimum 5% for homes under $500K; 10% on the portion between $500K–$999K; 20% for $1M+.">?</span></div>
+          <div class="down-row">
+            <div class="pct-wrap input-wrap">
+              <input type="number" id="downPct" value="20" min="0" max="100" step="0.5" class="no-pre no-suf" style="padding:9px 28px 9px 11px;" oninput="pctToAmt()">
+              <span class="suf">%</span>
+            </div>
+            <span class="eq">=</span>
+            <div class="amt-wrap input-wrap">
+              <span class="pre">$</span>
+              <input type="number" id="downAmt" value="160000" step="1000" class="no-suf" oninput="amtToPct()">
+            </div>
+          </div>
+          <div class="cmhc-note" id="cmhcNote">⚠️ Down payment under 20% requires CMHC mortgage insurance.</div>
+        </div>
+
+        <div class="grid2">
+          <div class="field">
+            <div class="field-label">Amortization <span class="tip" title="Total repayment period. Max 25 years for insured mortgages.">?</span></div>
+            <div class="input-wrap">
+              <input type="number" id="years" value="30" min="1" max="30" step="1" class="no-pre">
+              <span class="suf">Years</span>
+            </div>
+          </div>
+          <div class="field">
+            <div class="field-label">Payment Frequency <span class="tip" title="How often you make mortgage payments.">?</span></div>
+            <div class="input-wrap" style="position:static;">
+              <select id="freq">
+                <option value="12">Monthly</option>
+                <option value="24">Semi-Monthly</option>
+                <option value="26">Bi-Weekly</option>
+                <option value="52">Weekly</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">Property Location</div>
+          <div class="loc-row">
+            <div class="input-wrap" style="position:static;">
+              <select id="province" onchange="updateCities()">
+                <option value="ON">Ontario</option>
+                <option value="BC">British Columbia</option>
+                <option value="AB">Alberta</option>
+                <option value="QC">Quebec</option>
+                <option value="MB">Manitoba</option>
+                <option value="SK">Saskatchewan</option>
+                <option value="NS">Nova Scotia</option>
+                <option value="NB">New Brunswick</option>
+              </select>
+            </div>
+            <div class="input-wrap" style="position:static;">
+              <select id="city"></select>
+            </div>
+          </div>
+        </div>
+
+        <button class="calc-btn" onclick="calculate()">Calculate</button>
+        <p class="tos">By using the calculator, you agree to our <a href="#">Terms of Service</a></p>
+      </div>
+
+      <div class="result-panel">
+        <div id="placeholder" class="placeholder">Enter your details and click <strong>Calculate</strong></div>
+        <div id="results" style="display:none;">
+          <div class="monthly-section">
+            <div class="m-label">Monthly Payment</div>
+            <div class="m-amount" id="rMonthly">—</div>
+            <div class="m-freq" id="rFreqLabel">per month</div>
+          </div>
+          <div class="result-section">
+            <div class="section-title">Land Transfer Tax <span class="tip" title="Provincial and municipal land transfer taxes.">?</span></div>
+            <div class="result-row"><span class="r-label">First Time Home Buyer</span><span class="r-val orange" id="rLttFirst">—</span></div>
+            <div class="result-row"><span class="r-label">Non-First Time Home Buyer</span><span class="r-val orange" id="rLttNon">—</span></div>
+          </div>
+          <div class="divider"></div>
+          <div class="result-section">
+            <div class="section-title">First Year Payment</div>
+            <div class="result-row"><span class="r-label">Principal</span><span class="r-val" id="rFyPrincipal">—</span></div>
+            <div class="result-row"><span class="r-label">Interest</span><span class="r-val orange" id="rFyInterest">—</span></div>
+            <div class="result-row"><span class="r-label">Total</span><span class="r-val total" id="rFyTotal">—</span></div>
+          </div>
+          <div class="divider"></div>
+          <div class="result-section">
+            <div class="section-title">Total Mortgage Costs <span class="tip" title="Total costs over the full amortization period.">?</span></div>
+            <div class="result-row"><span class="r-label">Principal</span><span class="r-val" id="rTotalPrincipal">—</span></div>
+            <div class="result-row"><span class="r-label">Interest</span><span class="r-val orange" id="rTotalInterest">—</span></div>
+            <div class="result-row"><span class="r-label">Total</span><span class="r-val total" id="rTotal">—</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== GDS / TDS PANEL ===== -->
+    <div id="panel-gds" class="panel gds-panel">
+
+      <!-- LEFT: Inputs -->
+      <div class="gds-left">
+        <div>
+          <div class="gds-section-title">Mortgage</div>
+
+          <div class="gds-row" style="margin-bottom:12px;">
+            <div>
+              <div class="field-label" style="margin-bottom:0;">현재 연봉</div>
+              <div class="sub-label">Monthly</div>
+            </div>
+            <div>
+              <div class="gds-input-wrap">
+                <span class="pre">$</span>
+                <input type="number" id="g-salary" value="150000" step="1000" oninput="calcGDS()">
+              </div>
+              <div style="font-size:0.75rem; color:#888; margin-top:4px; text-align:right;" id="g-monthly-display">12,500</div>
+            </div>
+          </div>
+
+          <div style="height:1px; background:#eee; margin: 8px 0 14px;"></div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:6px;">
+            <div style="font-size:0.75rem; font-weight:700; color:#888; text-align:center;">모기지금액</div>
+            <div style="font-size:0.75rem; font-weight:700; color:#888; text-align:center;">이자</div>
+            <div style="font-size:0.75rem; font-weight:700; color:#888; text-align:center;">기간(년)</div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:4px;">
+            <div class="gds-input-wrap">
+              <span class="pre">$</span>
+              <input type="number" id="g-loan" value="640000" step="1000" oninput="calcGDS()">
+            </div>
+            <div class="gds-input-wrap">
+              <input type="number" id="g-rate" value="4.20" step="0.05" min="0" max="30" class="plain" style="padding-left:9px;" oninput="calcGDS()">
+            </div>
+            <div class="gds-input-wrap">
+              <input type="number" id="g-years" value="25" min="1" max="30" class="plain" style="padding-left:9px;" oninput="calcGDS()">
+            </div>
+          </div>
+          <div class="stress-note">스트레스 테스트 2% 추가</div>
+        </div>
+
+        <button class="gds-calc-btn" onclick="calcGDS()">Calculate</button>
+      </div>
+
+      <!-- RIGHT: Fixed costs + results -->
+      <div class="gds-right">
+        <div>
+          <div class="gds-section-title">고정비</div>
+          <div class="gds-row" style="margin-bottom:10px;">
+            <div>
+              <div class="field-label" style="margin-bottom:0;">Maintain Fee (50%)</div>
+              <div class="sub-label">월 콘도 fee의 50%</div>
+            </div>
+            <div class="gds-input-wrap">
+              <span class="pre">$</span>
+              <input type="number" id="g-maintain" value="200" step="10" oninput="calcGDS()">
+            </div>
+          </div>
+          <div class="gds-row" style="margin-bottom:10px;">
+            <div>
+              <div class="field-label" style="margin-bottom:0;">Heating</div>
+              <div class="sub-label">난방비</div>
+            </div>
+            <div class="gds-input-wrap">
+              <span class="pre">$</span>
+              <input type="number" id="g-heating" value="100" step="10" oninput="calcGDS()">
+            </div>
+          </div>
+          <div class="gds-row">
+            <div>
+              <div class="field-label" style="margin-bottom:0;">Property Tax</div>
+              <div class="sub-label">재산세 (월간)</div>
+            </div>
+            <div class="gds-input-wrap">
+              <span class="pre">$</span>
+              <input type="number" id="g-tax" value="333" step="10" oninput="calcGDS()">
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="gds-section-title">그외 비용</div>
+          <div class="gds-row">
+            <div>
+              <div class="field-label" style="margin-bottom:0;">Monthly Payment</div>
+              <div class="sub-label">Loan &amp; etc 부채</div>
+            </div>
+            <div class="gds-input-wrap">
+              <span class="pre">$</span>
+              <input type="number" id="g-other" value="700" step="50" oninput="calcGDS()">
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="ratio-box" style="margin-bottom:10px;">
+            <div class="ratio-label">GDS Ratio 비율</div>
+            <div class="ratio-val" id="g-gds-val">—</div>
+          </div>
+          <div class="ratio-box" style="margin-bottom:10px;">
+            <div class="ratio-label">TDS Ratio 비율</div>
+            <div class="ratio-val" id="g-tds-val">—</div>
+          </div>
+          <div class="td-note">
+            * TD 은행 기준 <strong>GDS 39%</strong> <strong>TDS 44%</strong> 미만입니다.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const cities = {
+  ON: ['Toronto','Ottawa','Mississauga','Hamilton','Brampton','London'],
+  BC: ['Vancouver','Victoria','Surrey','Burnaby','Richmond','Kelowna'],
+  AB: ['Calgary','Edmonton','Red Deer','Lethbridge','Medicine Hat'],
+  QC: ['Montreal','Quebec City','Laval','Gatineau','Sherbrooke'],
+  MB: ['Winnipeg','Brandon','Steinbach'],
+  SK: ['Saskatoon','Regina','Prince Albert'],
+  NS: ['Halifax','Dartmouth','Sydney'],
+  NB: ['Moncton','Saint John','Fredericton']
+};
+
+function updateCities() {
+  const prov = document.getElementById('province').value;
+  const cityEl = document.getElementById('city');
+  cityEl.innerHTML = cities[prov].map(c => `<option>${c}</option>`).join('');
+}
+updateCities();
+
+function setTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+}
+
+function syncDown() {
+  const price = parseFloat(document.getElementById('price').value) || 0;
+  const pct = parseFloat(document.getElementById('downPct').value) || 0;
+  document.getElementById('downAmt').value = Math.round(price * pct / 100);
+  checkCMHC();
+}
+function pctToAmt() {
+  const price = parseFloat(document.getElementById('price').value) || 0;
+  const pct = parseFloat(document.getElementById('downPct').value) || 0;
+  document.getElementById('downAmt').value = Math.round(price * pct / 100);
+  checkCMHC();
+}
+function amtToPct() {
+  const price = parseFloat(document.getElementById('price').value) || 1;
+  const amt = parseFloat(document.getElementById('downAmt').value) || 0;
+  document.getElementById('downPct').value = ((amt / price) * 100).toFixed(1);
+  checkCMHC();
+}
+function checkCMHC() {
+  const pct = parseFloat(document.getElementById('downPct').value) || 0;
+  document.getElementById('cmhcNote').classList.toggle('show', pct < 20);
+}
+
+function fmt(n) { return '$' + Math.round(n).toLocaleString('en-CA'); }
+
+function ontarioLTT(price) {
+  let t = 0;
+  if (price > 0)       t += Math.min(price, 55000) * 0.005;
+  if (price > 55000)   t += Math.min(price - 55000, 195000) * 0.010;
+  if (price > 250000)  t += Math.min(price - 250000, 150000) * 0.015;
+  if (price > 400000)  t += Math.min(price - 400000, 1600000) * 0.020;
+  if (price > 2000000) t += (price - 2000000) * 0.025;
+  return t;
+}
+function torontoLTT(price) {
+  let t = 0;
+  if (price > 0)       t += Math.min(price, 55000) * 0.005;
+  if (price > 55000)   t += Math.min(price - 55000, 345000) * 0.010;
+  if (price > 400000)  t += Math.min(price - 400000, 600000) * 0.020;
+  if (price > 1000000) t += Math.min(price - 1000000, 1000000) * 0.025;
+  if (price > 2000000) t += (price - 2000000) * 0.030;
+  return t;
+}
+function getLTT(price, province, city) {
+  let nonFirst = 0, rebate = 0;
+  if (province === 'ON') {
+    nonFirst = ontarioLTT(price);
+    if (city === 'Toronto') nonFirst += torontoLTT(price);
+    rebate = Math.min(nonFirst, 4000);
+  } else if (province === 'BC') {
+    if (price <= 200000) nonFirst = price * 0.01;
+    else if (price <= 2000000) nonFirst = 2000 + (price - 200000) * 0.02;
+    else nonFirst = 2000 + 36000 + (price - 2000000) * 0.03;
+    rebate = price <= 500000 ? nonFirst : 0;
+  } else if (province === 'QC') {
+    if (price <= 50000) nonFirst = price * 0.005;
+    else if (price <= 250000) nonFirst = 250 + (price - 50000) * 0.010;
+    else if (price <= 500000) nonFirst = 2250 + (price - 250000) * 0.015;
+    else nonFirst = 6000 + (price - 500000) * 0.020;
+  } else { nonFirst = 0; rebate = 0; }
+  return { first: Math.max(nonFirst - rebate, 0), nonFirst };
+}
+function getCMHCRate(ltv) {
+  if (ltv <= 0.65) return 0.006;
+  if (ltv <= 0.75) return 0.017;
+  if (ltv <= 0.80) return 0.024;
+  if (ltv <= 0.85) return 0.028;
+  if (ltv <= 0.90) return 0.031;
+  return 0.040;
+}
+
+function calculate() {
+  const price   = parseFloat(document.getElementById('price').value) || 0;
+  const downAmt = parseFloat(document.getElementById('downAmt').value) || 0;
+  const annRate = parseFloat(document.getElementById('rate').value) || 0;
+  const years   = parseInt(document.getElementById('years').value) || 25;
+  const freq    = parseInt(document.getElementById('freq').value);
+  const province = document.getElementById('province').value;
+  const city    = document.getElementById('city').value;
+  if (price <= 0) return;
+
+  let loan = price - downAmt;
+  const downRatio = downAmt / price;
+  if (downRatio < 0.20 && price <= 1500000) {
+    loan += loan * getCMHCRate(loan / price);
+  }
+
+  const semi = annRate / 100 / 2;
+  const effAnnual = Math.pow(1 + semi, 2) - 1;
+  const perRate = Math.pow(1 + effAnnual, 1 / freq) - 1;
+  const n = years * freq;
+  const payment = perRate === 0 ? loan / n : loan * (perRate * Math.pow(1+perRate,n)) / (Math.pow(1+perRate,n)-1);
+  const totalPaid = payment * n;
+  const totalInterest = totalPaid - loan;
+
+  let bal = loan, fyP = 0, fyI = 0;
+  for (let i = 0; i < freq; i++) {
+    const int = bal * perRate; const pr = payment - int;
+    fyI += int; fyP += pr; bal -= pr;
+  }
+
+  const { first, nonFirst } = getLTT(price, province, city);
+  const labels = { 12:'per month', 24:'per half-month', 26:'bi-weekly', 52:'per week' };
+
+  document.getElementById('placeholder').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('rMonthly').textContent = fmt(payment);
+  document.getElementById('rFreqLabel').textContent = labels[freq] || 'per period';
+  document.getElementById('rLttFirst').textContent = fmt(first);
+  document.getElementById('rLttNon').textContent = fmt(nonFirst);
+  document.getElementById('rFyPrincipal').textContent = fmt(fyP);
+  document.getElementById('rFyInterest').textContent = fmt(fyI);
+  document.getElementById('rFyTotal').textContent = fmt(fyP + fyI);
+  document.getElementById('rTotalPrincipal').textContent = fmt(loan);
+  document.getElementById('rTotalInterest').textContent = fmt(totalInterest);
+  document.getElementById('rTotal').textContent = fmt(totalPaid);
+}
+
+// ===== GDS / TDS Calculator =====
+function calcGDS() {
+  const salary  = parseFloat(document.getElementById('g-salary').value) || 0;
+  const loan    = parseFloat(document.getElementById('g-loan').value) || 0;
+  const rate    = parseFloat(document.getElementById('g-rate').value) || 0;
+  const yrs     = parseInt(document.getElementById('g-years').value) || 25;
+  const maintain = parseFloat(document.getElementById('g-maintain').value) || 0;
+  const heating  = parseFloat(document.getElementById('g-heating').value) || 0;
+  const propTax  = parseFloat(document.getElementById('g-tax').value) || 0;
+  const other    = parseFloat(document.getElementById('g-other').value) || 0;
+
+  const monthly = salary / 12;
+  document.getElementById('g-monthly-display').textContent = Math.round(monthly).toLocaleString('en-CA');
+
+  // Stress test: rate + 2%
+  const stressRate = (rate + 2) / 100;
+  const semi = stressRate / 2;
+  const effAnnual = Math.pow(1 + semi, 2) - 1;
+  const perRate = Math.pow(1 + effAnnual, 1/12) - 1;
+  const n = yrs * 12;
+  const mortgagePayment = perRate === 0 ? loan / n : loan * (perRate * Math.pow(1+perRate,n)) / (Math.pow(1+perRate,n)-1);
+
+  const gdsNumerator = mortgagePayment + maintain + heating + propTax;
+  const tdsNumerator = gdsNumerator + other;
+  const gds = (gdsNumerator / monthly) * 100;
+  const tds = (tdsNumerator / monthly) * 100;
+
+  const gdsEl = document.getElementById('g-gds-val');
+  const tdsEl = document.getElementById('g-tds-val');
+
+  gdsEl.textContent = gds.toFixed(2) + '%';
+  tdsEl.textContent = tds.toFixed(2) + '%';
+
+  gdsEl.className = 'ratio-val' + (gds >= 39 ? ' danger' : gds >= 35 ? ' warn' : '');
+  tdsEl.className = 'ratio-val' + (tds >= 44 ? ' danger' : tds >= 40 ? ' warn' : '');
+}
+
+// Auto-calculate GDS on load
+calcGDS();
+</script>
+</body>
+</html>
