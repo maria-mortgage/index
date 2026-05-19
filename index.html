@@ -1,34 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script>
-    // 페이지가 로드되기 전에 즉시 실행
-    const password = "2480";
-
-    // 먼저 body 전체를 숨김
-    document.addEventListener("DOMContentLoaded", function() {
-      document.body.style.visibility = "hidden";
-    });
-
-    // 비밀번호 확인
-    let userInput = prompt("비밀번호를 입력하세요");
-
-    if (userInput === password) {
-      // 맞으면 페이지 보여줌
-      document.addEventListener("DOMContentLoaded", function() {
-        document.body.style.visibility = "visible";
-      });
-    } else {
-      // 틀리거나 취소하면 차단
-      document.addEventListener("DOMContentLoaded", function() {
-        document.body.innerHTML = "<h1>접근 불가</h1>";
-        document.body.style.visibility = "visible";
-      });
-    }
-  </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mortgage Calculator</title>
+
+<script>
+  // 페이지 내용을 즉시 숨김
+  document.documentElement.style.visibility = 'hidden';
+
+  window.addEventListener('DOMContentLoaded', function () {
+    var PASSWORD = '2480';
+    var overlay = document.createElement('div');
+    overlay.id = 'pw-overlay';
+    overlay.style.cssText = [
+      'position:fixed', 'inset:0', 'z-index:99999',
+      'display:flex', 'align-items:center', 'justify-content:center',
+      'background:linear-gradient(135deg,#1e3a5f 0%,#2d5a9e 100%)'
+    ].join(';');
+
+    overlay.innerHTML = [
+      '<div style="background:#fff;border-radius:16px;padding:40px 36px;',
+        'box-shadow:0 8px 40px rgba(0,0,0,0.25);text-align:center;width:320px;">',
+        '<div style="font-size:2.2rem;margin-bottom:8px;">🔒</div>',
+        '<h2 style="font-family:Segoe UI,sans-serif;color:#1e3a5f;',
+          'font-size:1.1rem;margin-bottom:6px;">접근 제한</h2>',
+        '<p style="font-family:Segoe UI,sans-serif;color:#888;',
+          'font-size:0.82rem;margin-bottom:20px;">비밀번호를 입력해야 이용할 수 있습니다.</p>',
+        '<input id="pw-input" type="password" placeholder="비밀번호 입력"',
+          ' style="width:100%;border:1.5px solid #dde0e8;border-radius:8px;',
+          'padding:10px 14px;font-size:0.95rem;outline:none;',
+          'box-sizing:border-box;margin-bottom:10px;text-align:center;',
+          'letter-spacing:4px;" />',
+        '<div id="pw-error" style="color:#e53935;font-size:0.78rem;',
+          'margin-bottom:10px;min-height:18px;font-family:Segoe UI,sans-serif;"></div>',
+        '<button id="pw-btn"',
+          ' style="width:100%;background:#f47920;color:#fff;border:none;',
+          'border-radius:30px;padding:11px;font-size:0.95rem;font-weight:700;',
+          'cursor:pointer;font-family:Segoe UI,sans-serif;">확인</button>',
+      '</div>'
+    ].join('');
+
+    document.body.appendChild(overlay);
+
+    // 페이지 표시 (오버레이가 덮고 있으므로 내용은 보이지 않음)
+    document.documentElement.style.visibility = 'visible';
+
+    var input = document.getElementById('pw-input');
+    var btn   = document.getElementById('pw-btn');
+    var error = document.getElementById('pw-error');
+
+    input.focus();
+
+    function checkPassword() {
+      if (input.value === PASSWORD) {
+        overlay.remove();
+      } else {
+        error.textContent = '비밀번호가 틀렸습니다. 다시 입력해주세요.';
+        input.value = '';
+        input.style.borderColor = '#e53935';
+        input.focus();
+        setTimeout(function () {
+          input.style.borderColor = '#dde0e8';
+        }, 1500);
+      }
+    }
+
+    btn.addEventListener('click', checkPassword);
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') checkPassword();
+    });
+  });
+</script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
