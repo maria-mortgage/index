@@ -10,226 +10,178 @@
       document.body.innerHTML = "<h1>접근 불가</h1>";
     }
   </script>
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mortgage Calculator</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: 'Segoe UI', system-ui, sans-serif;
-  background: #eef0f4;
-  min-height: 100vh;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  background: #eef0f4; min-height: 100vh;
+  display: flex; align-items: flex-start; justify-content: center;
   padding: 30px 16px;
 }
-.wrapper { width: 100%; max-width: 860px; }
-h1 {
-  font-size: 1.1rem; font-weight: 700; color: #1e3a5f;
-  margin-bottom: 14px; letter-spacing: 0.2px;
-}
-
-/* Tabs */
-.tabs { display: flex; gap: 0; margin-bottom: 0; }
+.wrapper { width: 100%; max-width: 920px; }
+h1 { font-size: 1.1rem; font-weight: 700; color: #1e3a5f; margin-bottom: 14px; }
+.tabs { display: flex; gap: 0; flex-wrap: wrap; margin-bottom: 0; }
 .tab {
-  padding: 10px 22px; font-size: 0.78rem; font-weight: 700;
-  letter-spacing: 0.8px; text-transform: uppercase; cursor: pointer;
+  padding: 10px 18px; font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.6px; text-transform: uppercase; cursor: pointer;
   border: none; border-radius: 8px 8px 0 0;
-  background: #d8dce6; color: #666;
-  transition: background 0.2s, color 0.2s;
+  background: #d8dce6; color: #666; transition: background 0.2s, color 0.2s;
   display: flex; align-items: center; gap: 5px;
 }
 .tab.active { background: #f47920; color: #fff; }
-.tab .help {
-  width: 14px; height: 14px; border-radius: 50%;
-  background: rgba(255,255,255,0.35); font-size: 0.65rem;
-  display: inline-flex; align-items: center; justify-content: center; font-weight: 700;
-}
+.tab .help { width: 14px; height: 14px; border-radius: 50%; background: rgba(255,255,255,0.35); font-size: 0.62rem; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; }
 .tab:not(.active) .help { background: rgba(0,0,0,0.12); color: #888; }
-
-/* Panel visibility */
-.panel { display: none; }
-.panel.active { display: grid; }
-
-/* Main layout */
-.main {
-  background: #fff;
-  border-radius: 0 12px 12px 12px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-  overflow: hidden;
-}
-.purchase-panel {
-  grid-template-columns: 1fr 1fr;
-}
-
-/* Left: Form */
-.form-panel {
-  padding: 28px 28px 24px;
-  background: #fff;
-  border-right: 1px solid #eee;
-}
-.field { margin-bottom: 18px; }
-.field-label {
-  font-size: 0.78rem; font-weight: 600; color: #444;
-  margin-bottom: 6px; display: flex; align-items: center; gap: 4px;
-}
-.field-label .tip {
-  width: 14px; height: 14px; border-radius: 50%;
-  background: #c8cdd8; color: #fff; font-size: 0.6rem;
-  display: inline-flex; align-items: center; justify-content: center;
-  font-weight: 700; cursor: help;
-}
+.panel { display: none; background: #fff; border-radius: 0 12px 12px 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); overflow: hidden; }
+.panel.active { display: block; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; }
+.form-panel { padding: 28px; border-right: 1px solid #eee; }
+.result-panel { padding: 28px; }
+.field { margin-bottom: 16px; }
+.field-label { font-size: 0.78rem; font-weight: 600; color: #444; margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
+.tip { width: 14px; height: 14px; border-radius: 50%; background: #c8cdd8; color: #fff; font-size: 0.6rem; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; cursor: help; }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .input-wrap { position: relative; display: flex; align-items: center; }
-.input-wrap .pre, .input-wrap .suf {
-  position: absolute; font-size: 0.88rem; color: #888; pointer-events: none;
-}
-.input-wrap .pre { left: 11px; }
-.input-wrap .suf { right: 11px; }
-
-input[type="number"], select {
-  width: 100%; border: 1.5px solid #dde0e8; border-radius: 7px;
-  padding: 9px 36px 9px 28px; font-size: 0.92rem; color: #1a1a1a;
-  outline: none; background: #fff; -moz-appearance: textfield;
-  transition: border-color 0.2s;
-}
+.input-wrap .pre, .input-wrap .suf { position: absolute; font-size: 0.85rem; color: #888; pointer-events: none; }
+.input-wrap .pre { left: 10px; }
+.input-wrap .suf { right: 10px; }
+input[type="number"], select { width: 100%; border: 1.5px solid #dde0e8; border-radius: 7px; padding: 9px 32px 9px 26px; font-size: 0.9rem; color: #1a1a1a; outline: none; background: #fff; -moz-appearance: textfield; transition: border-color 0.2s; }
 input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
 input[type="number"]:focus, select:focus { border-color: #f47920; }
-input.no-pre { padding-left: 11px; }
-input.no-suf { padding-right: 11px; }
-select {
-  padding: 9px 11px; appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23aaa' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 10px center; cursor: pointer;
-}
+input.no-pre { padding-left: 10px; }
+input.no-suf { padding-right: 10px; }
+select { padding: 9px 10px; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23aaa' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 9px center; cursor: pointer; }
+.amort-preset { font-size: 0.75rem; padding: 6px 10px; margin-top: 6px; color: #555; background: #f7f8fc; }
 .down-row { display: flex; align-items: center; gap: 8px; }
-.down-row .pct-wrap { flex: 0 0 90px; }
+.down-row .pct-wrap { flex: 0 0 88px; }
 .down-row .eq { color: #aaa; font-size: 1rem; flex-shrink: 0; }
 .down-row .amt-wrap { flex: 1; }
 .loc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.calc-btn {
-  display: block; margin: 24px auto 0; padding: 12px 48px;
-  background: #f47920; color: #fff; border: none; border-radius: 30px;
-  font-size: 1rem; font-weight: 700; cursor: pointer; letter-spacing: 0.3px;
-  transition: background 0.2s, transform 0.1s;
-}
+.calc-btn { display: block; margin: 20px auto 0; padding: 11px 44px; background: #f47920; color: #fff; border: none; border-radius: 30px; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: background 0.2s, transform 0.1s; }
 .calc-btn:hover { background: #e06a10; }
 .calc-btn:active { transform: scale(0.98); }
-.tos { text-align: center; font-size: 0.68rem; color: #bbb; margin-top: 10px; }
+.tos { text-align: center; font-size: 0.68rem; color: #bbb; margin-top: 8px; }
 .tos a { color: #f47920; text-decoration: none; }
-
-/* Right: Results */
-.result-panel { padding: 28px 28px 24px; background: #fff; }
-.monthly-section {
-  text-align: center; padding-bottom: 20px;
-  border-bottom: 1px solid #eee; margin-bottom: 20px;
-}
-.monthly-section .m-label {
-  font-size: 0.85rem; font-weight: 700; color: #1e3a5f;
-  margin-bottom: 6px; letter-spacing: 0.2px;
-}
-.monthly-section .m-amount {
-  font-size: 2.6rem; font-weight: 800; color: #1e3a5f; letter-spacing: -1px;
-}
-.monthly-section .m-freq { font-size: 0.75rem; color: #aaa; margin-top: 2px; }
-.result-section { margin-bottom: 20px; }
+.monthly-section { text-align: center; padding-bottom: 18px; border-bottom: 1px solid #eee; margin-bottom: 18px; }
+.m-label { font-size: 0.82rem; font-weight: 700; color: #1e3a5f; margin-bottom: 5px; }
+.m-amount { font-size: 2.4rem; font-weight: 800; color: #1e3a5f; letter-spacing: -1px; }
+.m-freq { font-size: 0.73rem; color: #aaa; margin-top: 2px; }
+.result-section { margin-bottom: 18px; }
 .result-section:last-child { margin-bottom: 0; }
-.section-title {
-  font-size: 0.82rem; font-weight: 700; color: #1e3a5f;
-  margin-bottom: 10px; display: flex; align-items: center; gap: 4px;
-}
-.section-title .tip {
-  width: 14px; height: 14px; border-radius: 50%;
-  background: #c8cdd8; color: #fff; font-size: 0.6rem;
-  display: inline-flex; align-items: center; justify-content: center; font-weight: 700;
-}
-.result-row {
-  display: flex; justify-content: space-between; align-items: center;
-  font-size: 0.82rem; margin-bottom: 6px;
-}
+.section-title { font-size: 0.8rem; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; display: flex; align-items: center; gap: 4px; }
+.result-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; margin-bottom: 5px; }
 .result-row:last-child { margin-bottom: 0; }
-.result-row .r-label { color: #888; }
-.result-row .r-val { font-weight: 700; color: #1e3a5f; }
-.result-row .r-val.orange { color: #f47920; }
-.result-row .r-val.total { font-size: 0.92rem; }
-.divider { height: 1px; background: #eee; margin: 14px 0; }
+.r-label { color: #888; }
+.r-val { font-weight: 700; color: #1e3a5f; }
+.r-val.orange { color: #f47920; }
+.r-val.total { font-size: 0.9rem; }
+.divider { height: 1px; background: #eee; margin: 12px 0; }
 .placeholder { text-align: center; color: #ccc; font-size: 0.85rem; padding: 40px 0; }
-.cmhc-note {
-  font-size: 0.72rem; color: #e07a20; background: #fff8f2;
-  border: 1px solid #f4d0b0; border-radius: 6px; padding: 7px 10px;
-  margin-top: 8px; display: none;
-}
+.cmhc-note { font-size: 0.72rem; color: #e07a20; background: #fff8f2; border: 1px solid #f4d0b0; border-radius: 6px; padding: 7px 10px; margin-top: 6px; display: none; }
 .cmhc-note.show { display: block; }
-
-/* ===== GDS/TDS Panel ===== */
-.gds-panel {
-  display: none;
-  grid-template-columns: 1fr 1fr;
-  padding: 28px;
-  gap: 28px;
-}
-.gds-panel.active { display: grid; }
-
-.gds-left, .gds-right { display: flex; flex-direction: column; gap: 16px; }
-
-.gds-section-title {
-  font-size: 0.85rem; font-weight: 700; color: #1e3a5f;
-  border-bottom: 2px solid #1e3a5f; padding-bottom: 6px; margin-bottom: 4px;
-}
-
-.gds-row {
-  display: grid; grid-template-columns: 1fr 120px; align-items: center; gap: 8px;
-}
-.gds-row label { font-size: 0.8rem; color: #444; font-weight: 600; }
-.gds-row .sub-label { font-size: 0.72rem; color: #888; margin-top: 1px; }
-
-.gds-input-wrap { position: relative; display: flex; align-items: center; }
-.gds-input-wrap .pre { position: absolute; left: 9px; font-size: 0.82rem; color: #888; pointer-events: none; }
-.gds-input-wrap input {
-  width: 100%; border: 1.5px solid #dde0e8; border-radius: 7px;
-  padding: 8px 8px 8px 22px; font-size: 0.9rem; color: #1a1a1a;
-  outline: none; background: #ffede0;
-  -moz-appearance: textfield; transition: border-color 0.2s;
-}
-.gds-input-wrap input::-webkit-inner-spin-button { -webkit-appearance: none; }
-.gds-input-wrap input:focus { border-color: #f47920; }
-.gds-input-wrap input.plain { background: #fff; }
-
-.stress-note { font-size: 0.72rem; color: #888; margin-top: -10px; }
-
-/* Ratio result boxes */
-.ratio-box {
-  border: 1.5px solid #dde0e8; border-radius: 10px; padding: 14px 16px;
-  display: flex; justify-content: space-between; align-items: center;
-}
-.ratio-box .ratio-label { font-size: 0.85rem; font-weight: 700; color: #1e3a5f; }
-.ratio-box .ratio-val {
-  font-size: 1.5rem; font-weight: 800; color: #1e3a5f;
-  background: #c8f7c5; padding: 4px 14px; border-radius: 6px;
-}
-.ratio-box .ratio-val.warn { background: #ffe0b2; }
-.ratio-box .ratio-val.danger { background: #ffcdd2; }
-
-.td-note {
-  font-size: 0.75rem; color: #555; background: #f5f5f5;
-  border-radius: 8px; padding: 10px 12px; line-height: 1.6;
-}
+.gds-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; padding: 28px; }
+.sec-title { font-size: 0.82rem; font-weight: 700; color: #1e3a5f; border-bottom: 2px solid #1e3a5f; padding-bottom: 5px; margin-bottom: 12px; }
+.g-row { display: grid; grid-template-columns: 1fr 110px; align-items: center; gap: 8px; margin-bottom: 10px; }
+.g-row label { font-size: 0.78rem; color: #444; font-weight: 600; }
+.g-sub { font-size: 0.7rem; color: #999; }
+.gi-wrap { position: relative; display: flex; align-items: center; }
+.gi-wrap .pre { position: absolute; left: 9px; font-size: 0.8rem; color: #888; pointer-events: none; }
+.gi-wrap input { width: 100%; border: 1.5px solid #dde0e8; border-radius: 7px; padding: 7px 7px 7px 20px; font-size: 0.88rem; color: #1a1a1a; outline: none; background: #ffede0; -moz-appearance: textfield; transition: border-color 0.2s; }
+.gi-wrap input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.gi-wrap input:focus { border-color: #f47920; }
+.gi-wrap input.plain { background: #fff; }
+.stress-note { font-size: 0.7rem; color: #999; margin: -6px 0 10px; }
+.ratio-box { border: 1.5px solid #dde0e8; border-radius: 9px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.ratio-label { font-size: 0.82rem; font-weight: 700; color: #1e3a5f; }
+.ratio-val { font-size: 1.45rem; font-weight: 800; color: #1e3a5f; background: #c8f7c5; padding: 3px 12px; border-radius: 6px; }
+.ratio-val.warn { background: #ffe0b2; }
+.ratio-val.danger { background: #ffcdd2; }
+.td-note { font-size: 0.73rem; color: #555; background: #f5f5f5; border-radius: 8px; padding: 9px 11px; line-height: 1.6; }
 .td-note strong { color: #1e3a5f; }
-
-.gds-calc-btn {
-  display: block; margin: 4px auto 0; padding: 11px 40px;
-  background: #f47920; color: #fff; border: none; border-radius: 30px;
-  font-size: 0.95rem; font-weight: 700; cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
-}
-.gds-calc-btn:hover { background: #e06a10; }
-.gds-calc-btn:active { transform: scale(0.98); }
-
-@media (max-width: 620px) {
-  .purchase-panel, .gds-panel { grid-template-columns: 1fr; }
+.mortgage-grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 6px; }
+.col-head { font-size: 0.72rem; font-weight: 700; color: #888; text-align: center; }
+.debt-wrap { padding: 28px; }
+.debt-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+.debt-table th { background: #f0f2f7; font-size: 0.73rem; font-weight: 700; color: #444; padding: 8px 10px; text-align: left; border-bottom: 2px solid #dde0e8; }
+.debt-table td { padding: 6px 8px; border-bottom: 1px solid #eee; vertical-align: middle; }
+.debt-table td:first-child { font-weight: 600; color: #333; width: 160px; }
+.debt-table td.sub { font-size: 0.72rem; color: #888; }
+.debt-table input { width: 100%; border: 1.5px solid #dde0e8; border-radius: 6px; padding: 6px 8px; font-size: 0.82rem; color: #1a1a1a; outline: none; background: #fff7f0; -moz-appearance: textfield; text-align: right; transition: border-color 0.2s; }
+.debt-table input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.debt-table input:focus { border-color: #f47920; }
+.debt-total-box { display: flex; justify-content: flex-end; align-items: center; gap: 16px; margin-top: 14px; padding: 12px 16px; background: #fff3e8; border-radius: 9px; border: 1.5px solid #f4d0b0; }
+.debt-total-label { font-size: 0.85rem; font-weight: 700; color: #1e3a5f; }
+.debt-total-val { font-size: 1.4rem; font-weight: 800; color: #f47920; }
+.income-wrap { padding: 28px; }
+.income-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 18px; }
+.income-table th { background: #f0f2f7; font-size: 0.73rem; font-weight: 700; color: #444; padding: 8px 10px; text-align: left; border-bottom: 2px solid #dde0e8; }
+.income-table td { padding: 6px 8px; border-bottom: 1px solid #eee; vertical-align: middle; }
+.income-table td:first-child { font-weight: 600; color: #333; width: 180px; }
+.income-table input { width: 100%; border: 1.5px solid #dde0e8; border-radius: 6px; padding: 6px 8px; font-size: 0.82rem; color: #1a1a1a; outline: none; background: #fff7f0; -moz-appearance: textfield; text-align: right; transition: border-color 0.2s; }
+.income-table input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.income-table input:focus { border-color: #f47920; }
+.income-table input.plain { background: #fff; }
+.income-section-head td { background: #f7f9fc !important; font-weight: 700 !important; color: #1e3a5f !important; font-size: 0.78rem !important; }
+.income-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.inc-box { border: 1.5px solid #dde0e8; border-radius: 9px; padding: 14px; text-align: center; }
+.inc-box.main { border-color: #f4d0b0; background: #fff8f2; }
+.inc-box-label { font-size: 0.75rem; font-weight: 700; color: #888; margin-bottom: 4px; }
+.inc-box-val { font-size: 1.4rem; font-weight: 800; color: #1e3a5f; }
+.inc-box.main .inc-box-val { color: #f47920; }
+.fixed-wrap { padding: 28px; }
+.fixed-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+.fixed-table th { background: #f0f2f7; font-size: 0.73rem; font-weight: 700; color: #444; padding: 8px 10px; text-align: left; border-bottom: 2px solid #dde0e8; }
+.fixed-table th:not(:first-child) { text-align: right; }
+.fixed-table td { padding: 6px 8px; border-bottom: 1px solid #eee; vertical-align: middle; }
+.fixed-table td:first-child { font-weight: 600; color: #333; }
+.fixed-table td.auto-cell { text-align: right; font-weight: 700; color: #1e3a5f; background: #fff8f2; min-width: 130px; }
+.fixed-table td.amt-cell { text-align: right; }
+.fixed-table input { width: 100%; border: 1.5px solid #dde0e8; border-radius: 6px; padding: 6px 8px; font-size: 0.82rem; color: #1a1a1a; outline: none; background: #fff7f0; -moz-appearance: textfield; text-align: right; transition: border-color 0.2s; }
+.fixed-table input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.fixed-table input:focus { border-color: #f47920; }
+.fixed-section-head td { background: #1e3a5f !important; color: #fff !important; font-weight: 700 !important; font-size: 0.78rem !important; padding: 7px 10px !important; }
+.fixed-total-box { display: flex; justify-content: flex-end; align-items: center; gap: 16px; margin-top: 14px; padding: 12px 16px; background: #fff3e8; border-radius: 9px; border: 1.5px solid #f4d0b0; }
+.fixed-total-label { font-size: 0.85rem; font-weight: 700; color: #1e3a5f; }
+.fixed-total-val { font-size: 1.4rem; font-weight: 800; color: #f47920; }
+.fixed-formula { font-size: 0.68rem; color: #bbb; margin-left: 4px; }
+.direct-income-row td { background: #f0f7ff !important; }
+.direct-income-row input { background: #ddeeff !important; font-weight: 700; }
+.mindown-wrap { padding: 28px; max-width: 560px; margin: 0 auto; }
+.mindown-input-box { background: #f7f9fc; border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+.mindown-input-box .field-label { font-size: 0.85rem; margin-bottom: 10px; }
+.mindown-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-bottom: 20px; }
+.mindown-table th { background: #1e3a5f; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 9px 12px; text-align: left; }
+.mindown-table th:not(:first-child) { text-align: right; }
+.mindown-table td { padding: 9px 12px; border-bottom: 1px solid #eee; color: #333; }
+.mindown-table td:not(:first-child) { text-align: right; font-weight: 600; color: #1e3a5f; }
+.mindown-table tr:nth-child(even) { background: #f9fafb; }
+.mindown-result-box { border-radius: 12px; overflow: hidden; border: 2px solid #f47920; margin-bottom: 16px; }
+.mindown-result-row { display: flex; justify-content: space-between; align-items: center; padding: 13px 18px; border-bottom: 1px solid #ffe0cc; background: #fff8f2; }
+.mindown-result-row:last-child { border-bottom: none; }
+.mindown-result-row.highlight { background: #f47920; }
+.mindown-result-row.highlight .r-label { color: #ffe0cc; font-weight: 700; }
+.mindown-result-row.highlight .r-val { color: #fff; font-size: 1.3rem; }
+.mindown-result-row.highlight2 { background: #1e3a5f; }
+.mindown-result-row.highlight2 .r-label { color: #aac4e0; font-weight: 700; }
+.mindown-result-row.highlight2 .r-val { color: #fff; font-size: 1.3rem; }
+.cmhc-box { border-radius: 12px; overflow: hidden; border: 2px solid #1e3a5f; margin-bottom: 16px; }
+.cmhc-box-header { background: #1e3a5f; color: #fff; padding: 10px 18px; font-size: 0.82rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+.cmhc-row { display: flex; justify-content: space-between; align-items: center; padding: 11px 18px; border-bottom: 1px solid #e8edf5; background: #f4f7fb; font-size: 0.82rem; }
+.cmhc-row:last-child { border-bottom: none; }
+.cmhc-row .r-label { color: #666; }
+.cmhc-row .r-val { font-weight: 700; color: #1e3a5f; }
+.cmhc-row.total-row { background: #e8f0fb; }
+.cmhc-row.total-row .r-label { font-weight: 700; color: #1e3a5f; }
+.cmhc-row.total-row .r-val { color: #f47920; font-size: 1.1rem; }
+.cmhc-na { background: #f9fafb; border-radius: 10px; border: 2px dashed #dde0e8; padding: 18px; text-align: center; color: #aaa; font-size: 0.82rem; margin-bottom: 16px; }
+.mindown-note { font-size: 0.72rem; color: #aaa; margin-top: 4px; line-height: 1.6; background: #f5f5f5; border-radius: 8px; padding: 10px 12px; }
+.mindown-note strong { color: #1e3a5f; }
+@media (max-width: 640px) {
+  .two-col, .gds-wrap, .income-summary { grid-template-columns: 1fr; }
   .form-panel { border-right: none; border-bottom: 1px solid #eee; }
-  .tab { padding: 9px 14px; font-size: 0.72rem; }
+  .tab { padding: 8px 12px; font-size: 0.7rem; }
 }
 </style>
 </head>
@@ -237,95 +189,134 @@ select {
 <div class="wrapper">
   <h1>Mortgage Calculator</h1>
 
-  <div class="tabs">
-    <button class="tab active" onclick="setTab('purchase', this)">PURCHASE <span class="help">?</span></button>
-    <button class="tab" onclick="setTab('gds', this)">GDS / TDS <span class="help">?</span></button>
+  <div id="rate-banner" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+    <div style="background:#1e3a5f;color:#fff;border-radius:8px;padding:8px 16px;font-size:0.78rem;display:flex;align-items:center;gap:8px;">
+      <span style="color:#aac4e0;font-weight:600;">🏦 Prime Rate</span>
+      <span id="banner-prime" style="font-size:1.1rem;font-weight:800;color:#f47920;">4.45%</span>
+    </div>
+    <div style="background:#1e3a5f;color:#fff;border-radius:8px;padding:8px 16px;font-size:0.78rem;display:flex;align-items:center;gap:8px;">
+      <span style="color:#aac4e0;font-weight:600;">🏛️ BoC Policy Rate</span>
+      <span id="banner-boc" style="font-size:1.1rem;font-weight:800;color:#f47920;">2.25%</span>
+    </div>
+    <div style="background:#f0f2f7;border-radius:8px;padding:8px 16px;font-size:0.75rem;display:flex;align-items:center;gap:6px;color:#555;">
+      <span>📅 다음 금리 발표일</span>
+      <span style="font-weight:700;color:#1e3a5f;">2026년 6월 10일</span>
+    </div>
+    <div style="background:#fff8f2;border:1px solid #f4d0b0;border-radius:8px;padding:8px 12px;font-size:0.72rem;color:#888;display:flex;align-items:center;gap:4px;">
+      <span id="banner-updated">기준: 2026년 5월</span>
+      <button onclick="fetchRates()" style="border:none;background:#f47920;color:#fff;border-radius:10px;padding:2px 8px;font-size:0.68rem;cursor:pointer;font-weight:700;">새로고침</button>
+    </div>
   </div>
 
-  <div class="main">
+  <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px;">
+    <div style="background:#fff;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.07);padding:14px 18px;display:flex;align-items:center;flex-wrap:wrap;gap:12px;flex:1;min-width:280px;">
+      <span style="font-size:0.78rem;font-weight:700;color:#1e3a5f;">Prime Rate</span>
+      <div style="display:flex;align-items:center;gap:6px;font-size:0.82rem;">
+        <span style="color:#888;">Prime</span>
+        <span id="calc-prime-base" style="font-weight:800;color:#1e3a5f;">4.45%</span>
+        <span style="color:#aaa;">+</span>
+        <input type="number" id="prime-adjustment" value="" placeholder="예: -0.70" step="0.05"
+          style="width:110px;border:1.5px solid #dde0e8;border-radius:7px;padding:6px 10px;font-size:0.88rem;font-weight:700;color:#1e3a5f;outline:none;background:#fff7f0;-moz-appearance:textfield;text-align:center;"
+          oninput="calcPrimeAdj()">
+        <span style="color:#aaa;">=</span>
+        <span id="prime-result" style="font-size:1.2rem;font-weight:800;color:#f47920;background:#fff3e8;border-radius:7px;padding:4px 14px;border:1.5px solid #f4d0b0;">—</span>
+      </div>
+    </div>
+    <div style="background:#fff;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.07);padding:14px 18px;display:flex;align-items:center;flex-wrap:wrap;gap:12px;flex:1;min-width:280px;">
+      <div style="display:flex;align-items:center;gap:6px;font-size:0.82rem;flex-wrap:nowrap;">
+        <input type="number" id="sqft-size" placeholder="sqft" step="10" min="0"
+          style="width:80px;border:1.5px solid #dde0e8;border-radius:7px;padding:6px 6px;font-size:0.88rem;font-weight:700;color:#1e3a5f;outline:none;background:#fff7f0;-moz-appearance:textfield;text-align:center;"
+          oninput="calcSqft()">
+        <span style="color:#aaa;font-size:0.78rem;">sqft</span>
+        <span style="color:#aaa;">×</span>
+        <div style="position:relative;display:flex;align-items:center;">
+          <span style="position:absolute;left:8px;font-size:0.82rem;color:#888;pointer-events:none;">$</span>
+          <input type="number" id="sqft-price" placeholder="" step="10" min="0"
+            style="width:80px;border:1.5px solid #dde0e8;border-radius:7px;padding:6px 6px 6px 18px;font-size:0.88rem;font-weight:700;color:#1e3a5f;outline:none;background:#fff7f0;-moz-appearance:textfield;text-align:center;"
+            oninput="calcSqft()">
+        </div>
+        <span style="color:#aaa;font-size:0.78rem;">/sqft</span>
+        <span style="color:#aaa;">=</span>
+        <span id="sqft-result" style="font-size:1.2rem;font-weight:800;color:#f47920;background:#fff3e8;border-radius:7px;padding:4px 14px;border:1.5px solid #f4d0b0;">—</span>
+      </div>
+    </div>
+  </div>
 
-    <!-- ===== PURCHASE PANEL ===== -->
-    <div id="panel-purchase" class="panel purchase-panel active">
+  <div class="tabs">
+    <button class="tab active" onclick="setTab('purchase',this)">PURCHASE <span class="help">?</span></button>
+    <button class="tab" onclick="setTab('gds',this)">GDS / TDS <span class="help">?</span></button>
+    <button class="tab" onclick="setTab('debt',this)">DEBT <span class="help">?</span></button>
+    <button class="tab" onclick="setTab('income',this)">INCOME <span class="help">?</span></button>
+    <button class="tab" onclick="setTab('fixed',this)">고정지출 <span class="help">?</span></button>
+    <button class="tab" onclick="setTab('mindown',this)">최소 다운페이 <span class="help">?</span></button>
+    <button class="tab" onclick="setTab('afford',this)">구매가능 금액 <span class="help">?</span></button>
+    <button class="tab" onclick="setTab('reverse',this)">리버스 모기지 <span class="help">?</span></button>
+  </div>
+
+  <!-- PURCHASE -->
+  <div id="panel-purchase" class="panel active">
+    <div class="two-col">
       <div class="form-panel">
         <div class="grid2">
           <div class="field">
-            <div class="field-label">Home Price <span class="tip" title="The total purchase price of the property.">?</span></div>
-            <div class="input-wrap">
-              <span class="pre">$</span>
-              <input type="number" id="price" value="800000" step="1000" class="no-suf" oninput="syncDown()">
-            </div>
+            <div class="field-label">Home Price <span class="tip">?</span></div>
+            <div class="input-wrap"><span class="pre">$</span><input type="number" id="price" value="800000" step="1000" class="no-suf" oninput="syncDown()"></div>
           </div>
           <div class="field">
-            <div class="field-label">Interest Rate <span class="tip" title="Annual interest rate. Canada uses semi-annual compounding.">?</span></div>
-            <div class="input-wrap">
-              <input type="number" id="rate" value="4.2" step="0.05" min="0" max="30" class="no-pre">
-              <span class="suf">%</span>
-            </div>
+            <div class="field-label">Interest Rate <span class="tip">?</span></div>
+            <div class="input-wrap"><input type="number" id="rate" value="4.2" step="0.05" min="0" max="30" class="no-pre"><span class="suf">%</span></div>
           </div>
         </div>
-
         <div class="field">
-          <div class="field-label">Down Payment <span class="tip" title="Minimum 5% for homes under $500K; 10% on the portion between $500K–$999K; 20% for $1M+.">?</span></div>
+          <div class="field-label">Down Payment <span class="tip">?</span></div>
           <div class="down-row">
-            <div class="pct-wrap input-wrap">
-              <input type="number" id="downPct" value="20" min="0" max="100" step="0.5" class="no-pre no-suf" style="padding:9px 28px 9px 11px;" oninput="pctToAmt()">
-              <span class="suf">%</span>
-            </div>
+            <div class="pct-wrap input-wrap"><input type="number" id="downPct" value="20" min="0" max="100" step="0.5" class="no-pre no-suf" style="padding:9px 26px 9px 10px;" oninput="pctToAmt()"><span class="suf">%</span></div>
             <span class="eq">=</span>
-            <div class="amt-wrap input-wrap">
-              <span class="pre">$</span>
-              <input type="number" id="downAmt" value="160000" step="1000" class="no-suf" oninput="amtToPct()">
-            </div>
+            <div class="amt-wrap input-wrap"><span class="pre">$</span><input type="number" id="downAmt" value="160000" step="1000" class="no-suf" oninput="amtToPct()"></div>
           </div>
-          <div class="cmhc-note" id="cmhcNote">⚠️ Down payment under 20% requires CMHC mortgage insurance.</div>
+          <div class="cmhc-note" id="cmhcNote">Down payment under 20% requires CMHC mortgage insurance.</div>
         </div>
-
+        <div class="field">
+          <div class="field-label">Mortgage Amount</div>
+          <div class="input-wrap"><span class="pre">$</span><input type="number" id="mortgageAmt" class="no-suf" readonly style="background:#f0f2f7;color:#1e3a5f;font-weight:700;cursor:default;"></div>
+        </div>
         <div class="grid2">
           <div class="field">
-            <div class="field-label">Amortization <span class="tip" title="Total repayment period. Max 25 years for insured mortgages.">?</span></div>
-            <div class="input-wrap">
-              <input type="number" id="years" value="30" min="1" max="30" step="1" class="no-pre">
-              <span class="suf">Years</span>
-            </div>
-          </div>
-          <div class="field">
-            <div class="field-label">Payment Frequency <span class="tip" title="How often you make mortgage payments.">?</span></div>
-            <div class="input-wrap" style="position:static;">
-              <select id="freq">
-                <option value="12">Monthly</option>
-                <option value="24">Semi-Monthly</option>
-                <option value="26">Bi-Weekly</option>
-                <option value="52">Weekly</option>
+            <div class="field-label">Amortization <span class="tip">?</span></div>
+            <div class="input-wrap"><input type="number" id="years" value="25" min="1" max="30" step="1" class="no-pre"><span class="suf">Yrs</span></div>
+            <div style="margin-top:6px;">
+              <select id="amort-preset" class="amort-preset">
+                <option value="">-- 조건 선택 --</option>
+                <option value="25">25년 (기본)</option>
+                <option value="30">30년 (20%이상 or 첫집+신축 or 신축)</option>
               </select>
             </div>
           </div>
+          <div class="field">
+            <div class="field-label">Payment Freq <span class="tip">?</span></div>
+            <div class="input-wrap" style="position:static;"><select id="freq">
+              <option value="12">Monthly</option>
+              <option value="24">Semi-Monthly</option>
+              <option value="26">Bi-Weekly</option>
+              <option value="52">Weekly</option>
+            </select></div>
+          </div>
         </div>
-
         <div class="field">
           <div class="field-label">Property Location</div>
           <div class="loc-row">
-            <div class="input-wrap" style="position:static;">
-              <select id="province" onchange="updateCities()">
-                <option value="ON">Ontario</option>
-                <option value="BC">British Columbia</option>
-                <option value="AB">Alberta</option>
-                <option value="QC">Quebec</option>
-                <option value="MB">Manitoba</option>
-                <option value="SK">Saskatchewan</option>
-                <option value="NS">Nova Scotia</option>
-                <option value="NB">New Brunswick</option>
-              </select>
-            </div>
-            <div class="input-wrap" style="position:static;">
-              <select id="city"></select>
-            </div>
+            <div class="input-wrap" style="position:static;"><select id="province">
+              <option value="ON">Ontario</option><option value="BC">British Columbia</option>
+              <option value="AB">Alberta</option><option value="QC">Quebec</option>
+              <option value="MB">Manitoba</option><option value="SK">Saskatchewan</option>
+              <option value="NS">Nova Scotia</option><option value="NB">New Brunswick</option>
+            </select></div>
+            <div class="input-wrap" style="position:static;"><select id="city"></select></div>
           </div>
         </div>
-
         <button class="calc-btn" onclick="calculate()">Calculate</button>
         <p class="tos">By using the calculator, you agree to our <a href="#">Terms of Service</a></p>
       </div>
-
       <div class="result-panel">
         <div id="placeholder" class="placeholder">Enter your details and click <strong>Calculate</strong></div>
         <div id="results" style="display:none;">
@@ -335,7 +326,7 @@ select {
             <div class="m-freq" id="rFreqLabel">per month</div>
           </div>
           <div class="result-section">
-            <div class="section-title">Land Transfer Tax <span class="tip" title="Provincial and municipal land transfer taxes.">?</span></div>
+            <div class="section-title">Land Transfer Tax <span class="tip">?</span></div>
             <div class="result-row"><span class="r-label">First Time Home Buyer</span><span class="r-val orange" id="rLttFirst">—</span></div>
             <div class="result-row"><span class="r-label">Non-First Time Home Buyer</span><span class="r-val orange" id="rLttNon">—</span></div>
           </div>
@@ -348,7 +339,7 @@ select {
           </div>
           <div class="divider"></div>
           <div class="result-section">
-            <div class="section-title">Total Mortgage Costs <span class="tip" title="Total costs over the full amortization period.">?</span></div>
+            <div class="section-title">Total Mortgage Costs <span class="tip">?</span></div>
             <div class="result-row"><span class="r-label">Principal</span><span class="r-val" id="rTotalPrincipal">—</span></div>
             <div class="result-row"><span class="r-label">Interest</span><span class="r-val orange" id="rTotalInterest">—</span></div>
             <div class="result-row"><span class="r-label">Total</span><span class="r-val total" id="rTotal">—</span></div>
@@ -356,306 +347,898 @@ select {
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- ===== GDS / TDS PANEL ===== -->
-    <div id="panel-gds" class="panel gds-panel">
-
-      <!-- LEFT: Inputs -->
-      <div class="gds-left">
-        <div>
-          <div class="gds-section-title">Mortgage</div>
-
-          <div class="gds-row" style="margin-bottom:12px;">
-            <div>
-              <div class="field-label" style="margin-bottom:0;">현재 연봉</div>
-              <div class="sub-label">Monthly</div>
-            </div>
-            <div>
-              <div class="gds-input-wrap">
-                <span class="pre">$</span>
-                <input type="number" id="g-salary" value="150000" step="1000" oninput="calcGDS()">
-              </div>
-              <div style="font-size:0.75rem; color:#888; margin-top:4px; text-align:right;" id="g-monthly-display">12,500</div>
-            </div>
-          </div>
-
-          <div style="height:1px; background:#eee; margin: 8px 0 14px;"></div>
-
-          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:6px;">
-            <div style="font-size:0.75rem; font-weight:700; color:#888; text-align:center;">모기지금액</div>
-            <div style="font-size:0.75rem; font-weight:700; color:#888; text-align:center;">이자</div>
-            <div style="font-size:0.75rem; font-weight:700; color:#888; text-align:center;">기간(년)</div>
-          </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:4px;">
-            <div class="gds-input-wrap">
-              <span class="pre">$</span>
-              <input type="number" id="g-loan" value="640000" step="1000" oninput="calcGDS()">
-            </div>
-            <div class="gds-input-wrap">
-              <input type="number" id="g-rate" value="4.20" step="0.05" min="0" max="30" class="plain" style="padding-left:9px;" oninput="calcGDS()">
-            </div>
-            <div class="gds-input-wrap">
-              <input type="number" id="g-years" value="25" min="1" max="30" class="plain" style="padding-left:9px;" oninput="calcGDS()">
-            </div>
-          </div>
-          <div class="stress-note">스트레스 테스트 2% 추가</div>
+  <!-- GDS/TDS -->
+  <div id="panel-gds" class="panel">
+    <div class="gds-wrap">
+      <div>
+        <div class="sec-title">Mortgage</div>
+        <div class="g-row" style="margin-bottom:14px;">
+          <div><label>현재 연봉</label><div class="g-sub">Monthly: <span id="g-monthly-display">12,500</span></div></div>
+          <div class="gi-wrap"><span class="pre">$</span><input type="number" id="g-salary" value="150000" step="1000" oninput="calcGDS()"></div>
         </div>
+        <div class="divider"></div>
+        <div class="mortgage-grid3" style="margin-top:12px;">
+          <div class="col-head">모기지금액</div><div class="col-head">이자</div><div class="col-head">기간(년)</div>
+        </div>
+        <div class="mortgage-grid3">
+          <div class="gi-wrap"><span class="pre">$</span><input type="number" id="g-loan" value="640000" step="1000" oninput="calcGDS()"></div>
+          <div class="gi-wrap"><input type="number" id="g-rate" value="4.20" step="0.05" class="plain" style="padding-left:8px;" oninput="calcGDS()"></div>
+          <div class="gi-wrap"><input type="number" id="g-years" value="25" min="1" max="30" class="plain" style="padding-left:8px;" oninput="calcGDS()"></div>
+        </div>
+        <div class="stress-note">스트레스 테스트 2% 추가</div>
+        <button class="calc-btn" style="margin-top:16px;" onclick="calcGDS()">Calculate</button>
+      </div>
+      <div>
+        <div class="sec-title" style="display:flex;align-items:center;justify-content:space-between;">
+          <span>고정비</span>
+          <select id="g-prop-type" onchange="applyPropType()" style="width:100px;font-size:0.78rem;font-weight:600;color:#1e3a5f;border:1.5px solid #dde0e8;border-radius:7px;padding:4px 24px 4px 8px;background:#f7f8fc;outline:none;cursor:pointer;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23aaa' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 8px center;">
+            <option value="condo">콘도</option>
+            <option value="townhouse">타운하우스</option>
+            <option value="house">하우스</option>
+          </select>
+        </div>
+        <div class="g-row"><div><label>Maintain Fee</label><div class="g-sub" id="g-maintain-sub">월 콘도 fee의 50%</div></div><div class="gi-wrap"><span class="pre">$</span><input type="number" id="g-maintain" value="250" step="10" oninput="calcGDS()"></div></div>
+        <div class="g-row"><div><label>Heating</label><div class="g-sub">난방비</div></div><div class="gi-wrap"><span class="pre">$</span><input type="number" id="g-heating" value="100" step="10" oninput="calcGDS()"></div></div>
+        <div class="g-row"><div><label>Property Tax</label><div class="g-sub">재산세 (월간)</div></div><div class="gi-wrap"><span class="pre">$</span><input type="number" id="g-tax" value="250" step="10" oninput="calcGDS()"></div></div>
+        <div class="sec-title" style="margin-top:14px;">그외 비용</div>
+        <div class="g-row"><div><label>Monthly Payment</label><div class="g-sub">Loan &amp; etc 부채</div></div><div class="gi-wrap"><span class="pre">$</span><input type="number" id="g-other" value="700" step="50" oninput="calcGDS()"></div></div>
+        <div class="divider"></div>
+        <div class="ratio-box"><span class="ratio-label">GDS Ratio 비율</span><span class="ratio-val" id="g-gds-val">—</span></div>
+        <div class="ratio-box"><span class="ratio-label">TDS Ratio 비율</span><span class="ratio-val" id="g-tds-val">—</span></div>
+        <div class="td-note">* TD 은행 기준 <strong>GDS 39%</strong> <strong>TDS 44%</strong> 미만입니다.</div>
+        <div style="margin-top:10px;border:1px solid #dde0e8;border-radius:9px;overflow:hidden;font-size:0.75rem;">
+          <table style="width:100%;border-collapse:collapse;">
+            <thead>
+              <tr style="background:#1e3a5f;color:#fff;">
+                <th style="padding:7px 10px;text-align:left;font-weight:700;">렌더</th>
+                <th style="padding:7px 10px;text-align:center;font-weight:700;">GDS</th>
+                <th style="padding:7px 10px;text-align:center;font-weight:700;">TDS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="background:#f7f9fc;"><td colspan="3" style="padding:5px 10px;font-weight:700;color:#1e3a5f;font-size:0.72rem;">A 렌더</td></tr>
+              <tr><td style="padding:5px 10px;">A렌더</td><td style="text-align:center;font-weight:700;">39%</td><td style="text-align:center;font-weight:700;">44%</td></tr>
+              <tr style="background:#fff8f2;"><td style="padding:5px 10px;">하나</td><td style="text-align:center;font-weight:700;">45%</td><td style="text-align:center;font-weight:700;">50%</td></tr>
+              <tr><td style="padding:5px 10px;">신한</td><td style="text-align:center;font-weight:700;">40%</td><td style="text-align:center;font-weight:700;">50%</td></tr>
+              <tr style="background:#f7f9fc;"><td colspan="3" style="padding:5px 10px;font-weight:700;color:#1e3a5f;font-size:0.72rem;">B 렌더</td></tr>
+              <tr><td style="padding:5px 10px;">EQ</td><td style="text-align:center;font-weight:700;">48%</td><td style="text-align:center;font-weight:700;">48%</td></tr>
+              <tr style="background:#fff8f2;"><td style="padding:5px 10px;">F.N</td><td style="text-align:center;font-weight:700;">50%</td><td style="text-align:center;font-weight:700;">50% <span style="font-size:0.68rem;color:#888;">(65%비즈니스)</span></td></tr>
+              <tr><td style="padding:5px 10px;">CWB</td><td style="text-align:center;font-weight:700;">55%</td><td style="text-align:center;font-weight:700;">55%</td></tr>
+              <tr style="background:#f7f9fc;"><td colspan="3" style="padding:5px 10px;font-weight:700;color:#1e3a5f;font-size:0.72rem;">기타</td></tr>
+              <tr><td style="padding:5px 10px;">신용조합</td><td style="text-align:center;font-weight:700;">60</td><td style="text-align:center;font-weight:700;">60</td></tr>
+              <tr style="background:#fff8f2;"><td style="padding:5px 10px;">홈트러스트</td><td style="text-align:center;font-weight:700;">60</td><td style="text-align:center;font-weight:700;">60</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        <button class="gds-calc-btn" onclick="calcGDS()">Calculate</button>
+  <!-- DEBT -->
+  <div id="panel-debt" class="panel">
+    <div class="debt-wrap">
+      <table class="debt-table">
+        <thead><tr><th>항목</th><th>구분</th><th style="text-align:right;">금액 ($)</th><th style="text-align:right;">월 납부액 ($)</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="2">Credit Card</td><td class="sub">Balance</td><td><input type="number" id="cc-balance" value="4000" step="100" oninput="autoMonthly('cc-balance','cc-monthly');calcDebt()"></td><td><input type="number" id="cc-monthly" value="120" step="10" oninput="calcDebt()"></td></tr>
+          <tr><td class="sub">Limit</td><td><input type="number" id="cc-limit" value="5000" step="100" oninput="autoMonthly('cc-limit','cc-limit-m');calcDebt()"></td><td><input type="number" id="cc-limit-m" value="150" step="10" oninput="calcDebt()"></td></tr>
+          <tr><td>Personal Loan</td><td></td><td></td><td><input type="number" id="pl-monthly" placeholder="0" step="50" oninput="calcDebt()"></td></tr>
+          <tr><td>Auto Loan</td><td></td><td></td><td><input type="number" id="al-monthly" value="600" step="50" oninput="calcDebt()"></td></tr>
+          <tr><td>Secured LOC<br><span style="font-size:0.7rem;color:#999;">(할락)</span></td><td></td><td></td><td><input type="number" id="sloc-monthly" placeholder="0" step="50" oninput="calcDebt()"></td></tr>
+          <tr><td>Unsecured LOC<br><span style="font-size:0.7rem;color:#999;">(개인라인)</span></td><td class="sub">Limit</td><td><input type="number" id="uloc-limit" value="0" step="100" oninput="autoMonthly('uloc-limit','uloc-monthly');calcDebt()"></td><td><input type="number" id="uloc-monthly" value="0" step="50" oninput="calcDebt()"></td></tr>
+          <tr><td>Alimony<br><span style="font-size:0.7rem;color:#999;">(위자료)</span></td><td></td><td></td><td><input type="number" id="ali-monthly" placeholder="0" step="50" oninput="calcDebt()"></td></tr>
+          <tr><td>Child Support<br><span style="font-size:0.7rem;color:#999;">(양육비)</span></td><td></td><td></td><td><input type="number" id="cs-monthly" placeholder="0" step="50" oninput="calcDebt()"></td></tr>
+          <tr><td>Other<br><span style="font-size:0.7rem;color:#999;">(기타)</span></td><td></td><td></td><td><input type="number" id="oth-monthly" placeholder="0" step="50" oninput="calcDebt()"></td></tr>
+        </tbody>
+      </table>
+      <div class="debt-total-box"><span class="debt-total-label">Total Monthly Debt</span><span class="debt-total-val" id="debt-total">$870</span></div>
+    </div>
+  </div>
+
+  <!-- INCOME -->
+  <div id="panel-income" class="panel">
+    <div class="income-wrap">
+      <table class="income-table">
+        <thead><tr><th>항목</th><th style="text-align:right;">시급/금액</th><th style="text-align:right;">근무시간</th><th style="text-align:right;">연간 합계 ($)</th></tr></thead>
+        <tbody>
+          <tr class="income-section-head"><td colspan="4">급여 소득</td></tr>
+          <tr><td>연봉 (시급)</td><td><input type="number" id="i-hourly" value="43" step="0.5" oninput="calcIncome()"></td><td><input type="number" id="i-hours" value="42.5" step="0.5" class="plain" oninput="calcIncome()"></td><td style="text-align:right;font-weight:700;color:#1e3a5f;" id="i-hourly-annual">93,925</td></tr>
+          <tr><td colspan="3" style="font-size:0.72rem;color:#888;padding:4px 8px;">주급</td><td></td></tr>
+          <tr><td>weekly (1주에 한번)</td><td><input type="number" id="i-weekly" value="0" step="100" oninput="calcIncome()"></td><td></td><td style="text-align:right;font-weight:700;color:#1e3a5f;" id="i-weekly-annual">0</td></tr>
+          <tr><td>biweekly (2주에 한번)</td><td><input type="number" id="i-biweekly" value="6000" step="100" oninput="calcIncome()"></td><td></td><td style="text-align:right;font-weight:700;color:#1e3a5f;" id="i-biweekly-annual">156,000</td></tr>
+          <tr><td>semi-monthly (한달에 2번)</td><td><input type="number" id="i-semimonthly" value="0" step="100" oninput="calcIncome()"></td><td></td><td style="text-align:right;font-weight:700;color:#1e3a5f;" id="i-semimonthly-annual">0</td></tr>
+          <tr><td>monthly</td><td><input type="number" id="i-monthly-pay" value="0" step="100" oninput="calcIncome()"></td><td></td><td style="text-align:right;font-weight:700;color:#1e3a5f;" id="i-monthly-annual">0</td></tr>
+          <tr class="direct-income-row"><td>1년 인컴 직접입력</td><td colspan="2" style="font-size:0.75rem;color:#555;padding:6px 8px;">연봉을 직접 입력</td><td><input type="number" id="i-direct-annual" placeholder="0" step="1000" oninput="calcIncome()"></td></tr>
+          <tr style="background:#fff8f0;"><td style="font-weight:700;color:#1e3a5f;">년 인컴 TOTAL</td><td colspan="2" style="font-size:0.75rem;color:#888;">자동 합산</td><td><input type="number" id="i-manual-total" value="249925" step="1000" style="background:#ffede0;font-weight:700;" oninput="calcIncome()"></td></tr>
+          <tr><td colspan="4" style="font-size:0.72rem;color:#888;padding:4px 8px;">(weekly, biweekly, semi-monthly, monthly, yearly)</td></tr>
+          <tr class="income-section-head"><td colspan="4">기타 소득 (Other Income)</td></tr>
+          <tr><td>other income</td><td><input type="number" id="i-other1" value="0" step="100" oninput="calcIncome()"></td><td></td><td style="text-align:right;font-weight:700;color:#1e3a5f;" id="i-other1-annual">0</td></tr>
+          <tr><td>CCB</td><td><input type="number" id="i-ccb" value="372" step="10" oninput="calcIncome()"></td><td></td><td style="text-align:right;font-weight:700;color:#1e3a5f;" id="i-ccb-annual">4,464</td></tr>
+          <tr><td>other income</td><td><input type="number" id="i-other2" value="0" step="100" oninput="calcIncome()"></td><td></td><td style="text-align:right;font-weight:700;color:#1e3a5f;" id="i-other2-annual">0</td></tr>
+          <tr style="background:#fff8f0;"><td colspan="3" style="font-weight:700;color:#1e3a5f;">OTHER TOTAL</td><td style="text-align:right;font-weight:700;color:#f47920;" id="i-other-total">4,464</td></tr>
+          <tr style="background:#ffede0;"><td colspan="3" style="font-weight:800;color:#1e3a5f;font-size:0.9rem;">TOTAL</td><td style="text-align:right;font-weight:800;color:#f47920;font-size:0.9rem;" id="i-grand-total">254,389</td></tr>
+        </tbody>
+      </table>
+      <div class="income-summary">
+        <div class="inc-box"><div class="inc-box-label">연간 총 소득</div><div class="inc-box-val" id="i-sum-annual">$254,389</div></div>
+        <div class="inc-box main"><div class="inc-box-label">월 평균 소득</div><div class="inc-box-val" id="i-sum-monthly">$21,199</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 고정지출 -->
+  <div id="panel-fixed" class="panel">
+    <div class="fixed-wrap">
+      <table class="fixed-table">
+        <thead><tr><th style="width:220px;">항목</th><th style="text-align:right;width:140px;">입력 금액 ($)</th><th style="text-align:right;">월 납부액 ($)</th></tr></thead>
+        <tbody>
+          <tr class="fixed-section-head"><td colspan="3">관리비</td></tr>
+          <tr><td>다운하우스 관리비 <span class="fixed-formula">x 50%</span></td><td class="amt-cell"><input type="number" id="f-townhouse-fee" value="100" step="50" oninput="calcFixed()"></td><td class="auto-cell" id="f-townhouse-fee-m">50.00</td></tr>
+          <tr><td>콘도 관리비 <span class="fixed-formula">x 50%</span></td><td class="amt-cell"><input type="number" id="f-condo-fee" value="500" step="50" oninput="calcFixed()"></td><td class="auto-cell" id="f-condo-fee-m">250.00</td></tr>
+          <tr class="fixed-section-head"><td colspan="3">재산세 (Property Tax)</td></tr>
+          <tr><td>콘도 재산세 <span class="fixed-formula">/ 12</span></td><td class="amt-cell"><input type="number" id="f-condo-tax" value="3000" step="100" oninput="calcFixed()"></td><td class="auto-cell" id="f-condo-tax-m">250.00</td></tr>
+          <tr><td>하우스 재산세 <span class="fixed-formula">/ 12</span></td><td class="amt-cell"><input type="number" id="f-house-tax" value="5000" step="100" oninput="calcFixed()"></td><td class="auto-cell" id="f-house-tax-m">416.67</td></tr>
+          <tr class="fixed-section-head"><td colspan="3">공과금</td></tr>
+          <tr><td>Heating (난방비) <span class="fixed-formula">월액</span></td><td class="amt-cell"><input type="number" id="f-heating" value="100" step="10" oninput="calcFixed()"></td><td class="auto-cell" id="f-heating-m">100.00</td></tr>
+        </tbody>
+      </table>
+      <div class="fixed-total-box"><span class="fixed-total-label">Total Monthly Fixed Expenses</span><span class="fixed-total-val" id="fixed-total">$1,066.67</span></div>
+    </div>
+  </div>
+
+  <!-- 구매가능 금액 -->
+  <div id="panel-afford" class="panel">
+    <div style="padding:28px;max-width:560px;margin:0 auto;">
+      <div style="background:#f7f9fc;border-radius:10px;padding:20px;margin-bottom:20px;">
+        <div style="font-size:0.85rem;font-weight:700;color:#1e3a5f;margin-bottom:14px;">내 다운페이먼트 금액 입력</div>
+        <div style="position:relative;display:flex;align-items:center;">
+          <span style="position:absolute;left:12px;color:#888;font-size:0.9rem;pointer-events:none;">$</span>
+          <input type="number" id="af-down" value="50000" step="5000"
+            style="width:100%;border:1.5px solid #dde0e8;border-radius:8px;padding:12px 12px 12px 28px;font-size:1.1rem;font-weight:800;color:#1e3a5f;outline:none;-moz-appearance:textfield;"
+            oninput="calcAfford()">
+        </div>
       </div>
 
-      <!-- RIGHT: Fixed costs + results -->
-      <div class="gds-right">
-        <div>
-          <div class="gds-section-title">고정비</div>
-          <div class="gds-row" style="margin-bottom:10px;">
-            <div>
-              <div class="field-label" style="margin-bottom:0;">Maintain Fee (50%)</div>
-              <div class="sub-label">월 콘도 fee의 50%</div>
-            </div>
-            <div class="gds-input-wrap">
-              <span class="pre">$</span>
-              <input type="number" id="g-maintain" value="200" step="10" oninput="calcGDS()">
-            </div>
-          </div>
-          <div class="gds-row" style="margin-bottom:10px;">
-            <div>
-              <div class="field-label" style="margin-bottom:0;">Heating</div>
-              <div class="sub-label">난방비</div>
-            </div>
-            <div class="gds-input-wrap">
-              <span class="pre">$</span>
-              <input type="number" id="g-heating" value="100" step="10" oninput="calcGDS()">
-            </div>
-          </div>
-          <div class="gds-row">
-            <div>
-              <div class="field-label" style="margin-bottom:0;">Property Tax</div>
-              <div class="sub-label">재산세 (월간)</div>
-            </div>
-            <div class="gds-input-wrap">
-              <span class="pre">$</span>
-              <input type="number" id="g-tax" value="333" step="10" oninput="calcGDS()">
-            </div>
+      <!-- 결과 테이블 -->
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:0.82rem;">
+          <thead>
+            <tr style="background:#1e3a5f;color:#fff;">
+              <th style="padding:10px 12px;text-align:left;font-weight:700;">구분</th>
+              <th style="padding:10px 8px;text-align:center;font-weight:700;background:#f47920;">5% 다운</th>
+              <th style="padding:10px 8px;text-align:center;font-weight:700;">10% 다운</th>
+              <th style="padding:10px 8px;text-align:center;font-weight:700;">20% 다운</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background:#fff8f2;">
+              <td style="padding:10px 12px;font-weight:700;color:#555;">최대 구매 가능 금액</td>
+              <td style="padding:10px 8px;text-align:center;font-weight:800;color:#f47920;font-size:1rem;" id="af-price-5">—</td>
+              <td style="padding:10px 8px;text-align:center;font-weight:800;color:#1e3a5f;font-size:1rem;" id="af-price-10">—</td>
+              <td style="padding:10px 8px;text-align:center;font-weight:800;color:#1e3a5f;font-size:1rem;" id="af-price-20">—</td>
+            </tr>
+            <tr>
+              <td style="padding:8px 12px;color:#888;">다운페이 비율</td>
+              <td style="padding:8px;text-align:center;font-weight:700;color:#f47920;" id="af-pct-5">5%</td>
+              <td style="padding:8px;text-align:center;font-weight:700;color:#888;" id="af-pct-10">10%</td>
+              <td style="padding:8px;text-align:center;font-weight:700;color:#888;" id="af-pct-20">20%</td>
+            </tr>
+            <tr style="background:#f7f9fc;">
+              <td style="padding:8px 12px;color:#888;">모기지 금액</td>
+              <td style="padding:8px;text-align:center;font-weight:700;color:#1e3a5f;" id="af-mortgage-5">—</td>
+              <td style="padding:8px;text-align:center;font-weight:700;color:#1e3a5f;" id="af-mortgage-10">—</td>
+              <td style="padding:8px;text-align:center;font-weight:700;color:#1e3a5f;" id="af-mortgage-20">—</td>
+            </tr>
+            <tr>
+              <td style="padding:8px 12px;color:#888;">CMHC 보험료</td>
+              <td style="padding:8px;text-align:center;font-weight:700;color:#e06a10;" id="af-cmhc-5">—</td>
+              <td style="padding:8px;text-align:center;font-weight:700;color:#e06a10;" id="af-cmhc-10">—</td>
+              <td style="padding:8px;text-align:center;font-weight:700;color:#aaa;">없음</td>
+            </tr>
+            <tr style="background:#e8f4fd;">
+              <td style="padding:10px 12px;font-weight:800;color:#1e3a5f;">총 모기지 (보험 포함)</td>
+              <td style="padding:10px 8px;text-align:center;font-weight:800;color:#f47920;" id="af-total-5">—</td>
+              <td style="padding:10px 8px;text-align:center;font-weight:800;color:#1e3a5f;" id="af-total-10">—</td>
+              <td style="padding:10px 8px;text-align:center;font-weight:800;color:#1e3a5f;" id="af-total-20">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="af-note" style="margin-top:14px;font-size:0.72rem;color:#888;background:#f5f5f5;border-radius:8px;padding:10px 12px;line-height:1.7;"></div>
+
+      <div style="margin-top:12px;background:#fff3e8;border:1.5px solid #f4d0b0;border-radius:10px;padding:12px 16px;font-size:0.75rem;color:#555;line-height:1.7;">
+        <strong style="color:#1e3a5f;">참고:</strong><br>
+        • 5% 다운: $500K 이하 가능 (CMHC 4.00%)<br>
+        • 5~10% 다운: $500K~$999,999 구간 혼합 적용<br>
+        • 20% 이상: CMHC 보험 없음, $1M+ 구매 가능
+      </div>
+    </div>
+  </div>
+
+
+  <div id="panel-mindown" class="panel">
+    <div class="mindown-wrap">
+      <div class="mindown-input-box">
+        <div class="field-label">주택 가격 (Home Price)</div>
+        <div class="input-wrap"><span class="pre">$</span><input type="number" id="md-price" value="1000000" step="10000" class="no-suf" oninput="calcMinDown()"></div>
+      </div>
+      <table class="mindown-table">
+        <thead><tr><th>구간</th><th style="text-align:right;">금액</th><th style="text-align:center;">비율 (수정가능)</th><th style="text-align:right;">최소 다운</th></tr></thead>
+        <tbody id="md-tbody"></tbody>
+      </table>
+
+      <!-- 기본 결과 -->
+      <div class="mindown-result-box">
+        <div class="mindown-result-row"><span class="r-label">주택 가격</span><span class="r-val" id="md-show-price">$1,000,000</span></div>
+        <div class="mindown-result-row"><span class="r-label">다운페이먼트 금액</span><span class="r-val orange" id="md-total-down">$75,000</span></div>
+        <div class="mindown-result-row"><span class="r-label">다운페이먼트 비율</span><span class="r-val" id="md-pct">7.50%</span></div>
+        <div class="mindown-result-row highlight"><span class="r-label">최소 모기지 금액</span><span class="r-val" id="md-mortgage">$925,000</span></div>
+      </div>
+
+      <!-- CMHC 섹션 -->
+      <div id="md-cmhc-section"></div>
+
+      <div class="mindown-note">
+        <strong>캐나다 연방 최소 다운페이 규정:</strong><br>
+        • $500,000 이하: <strong>5%</strong><br>
+        • $500,001 ~ $999,999: 초과분에 <strong>10%</strong><br>
+        • $1,000,000 이상: <strong>20%</strong> (CMHC 보험 불가)<br><br>
+        ※ $1,000,000 이상은 CMHC 모기지 보험 적용 불가로 최소 20% 다운 필요.
+      </div>
+    </div>
+  </div>
+
+  <!-- 리버스 모기지 -->
+  <div id="panel-reverse" class="panel">
+    <div class="two-col">
+      <div class="form-panel">
+        <div style="margin-bottom:18px;">
+          <div style="font-size:0.82rem;font-weight:700;color:#1e3a5f;margin-bottom:6px;">리버스 모기지란?</div>
+          <div style="font-size:0.75rem;color:#888;line-height:1.7;background:#f7f9fc;border-radius:8px;padding:10px 12px;">
+            55세 이상 주택 소유자가 집을 담보로 대출을 받으면서 <strong>월 상환 없이</strong> 거주를 유지하는 상품입니다. 대출금은 집 매각 시 또는 사망 시 상환됩니다.
           </div>
         </div>
 
-        <div>
-          <div class="gds-section-title">그외 비용</div>
-          <div class="gds-row">
-            <div>
-              <div class="field-label" style="margin-bottom:0;">Monthly Payment</div>
-              <div class="sub-label">Loan &amp; etc 부채</div>
-            </div>
-            <div class="gds-input-wrap">
-              <span class="pre">$</span>
-              <input type="number" id="g-other" value="700" step="50" oninput="calcGDS()">
-            </div>
+        <div class="field">
+          <div class="field-label">막내 주택 소유자 나이 <span class="tip" title="두 소유자 중 더 어린 사람의 나이">?</span></div>
+          <div class="input-wrap">
+            <input type="number" id="rv-age" value="65" min="55" max="90" step="1" class="no-pre no-suf" oninput="calcReverse()">
           </div>
+          <div style="font-size:0.72rem;color:#aaa;margin-top:4px;">최소 55세 이상이어야 합니다</div>
         </div>
 
-        <div>
-          <div class="ratio-box" style="margin-bottom:10px;">
-            <div class="ratio-label">GDS Ratio 비율</div>
-            <div class="ratio-val" id="g-gds-val">—</div>
+        <div class="field">
+          <div class="field-label">Province <span class="tip">?</span></div>
+          <select id="rv-province" onchange="updateRvCities()" style="padding:9px 32px 9px 10px;width:100%;border:1.5px solid #dde0e8;border-radius:7px;appearance:none;font-size:0.9rem;color:#1a1a1a;outline:none;background:#fff url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23aaa' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E\") no-repeat right 9px center;cursor:pointer;" onchange="updateRvCities();calcReverse();">
+            <option value="">Select</option>
+            <option value="ON">Ontario</option>
+            <option value="BC">British Columbia</option>
+            <option value="AB">Alberta</option>
+            <option value="QC">Quebec</option>
+            <option value="MB">Manitoba</option>
+            <option value="SK">Saskatchewan</option>
+            <option value="NS">Nova Scotia</option>
+            <option value="NB">New Brunswick</option>
+            <option value="NL">Newfoundland</option>
+            <option value="PE">PEI</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <div class="field-label">City <span class="tip">?</span></div>
+          <select id="rv-city" style="padding:9px 32px 9px 10px;width:100%;border:1.5px solid #dde0e8;border-radius:7px;appearance:none;font-size:0.9rem;color:#1a1a1a;outline:none;background:#fff url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23aaa' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E\") no-repeat right 9px center;cursor:pointer;" onchange="calcReverse()">
+            <option value="">Select</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <div class="field-label">주택 감정가 (Home Value) <span class="tip">?</span></div>
+          <div class="input-wrap"><span class="pre">$</span><input type="number" id="rv-home-value" value="800000" step="10000" class="no-suf" oninput="calcReverse()"></div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">기존 모기지 잔액 <span style="font-size:0.72rem;color:#aaa;">(있는 경우)</span></div>
+          <div class="input-wrap"><span class="pre">$</span><input type="number" id="rv-existing" value="0" step="1000" class="no-suf" oninput="calcReverse()"></div>
+          <div style="font-size:0.72rem;color:#aaa;margin-top:4px;">리버스 모기지 승인 시 기존 모기지는 상환됩니다</div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">예상 보유 기간</div>
+          <div class="input-wrap"><input type="number" id="rv-hold-years" value="15" min="1" max="40" step="1" class="no-pre"><span class="suf">년</span></div>
+        </div>
+
+        <button class="calc-btn" onclick="calcReverse()">계산하기</button>
+        <div class="tos" style="margin-top:10px;">* 실제 한도는 감정평가 및 심사에 따라 달라질 수 있습니다</div>
+      </div>
+
+      <!-- 결과 패널 -->
+      <div class="result-panel">
+        <div id="rv-placeholder" class="placeholder">
+          ← 입력값을 채우면<br>자동으로 계산됩니다
+        </div>
+        <div id="rv-result" style="display:none;">
+
+          <div class="monthly-section">
+            <div class="m-label">최대 대출 가능 금액</div>
+            <div class="m-amount" id="rv-max-loan">—</div>
+            <div class="m-freq">주택 감정가의 <span id="rv-ltv-pct" style="color:#f47920;font-weight:800;">—</span> (LTV)</div>
           </div>
-          <div class="ratio-box" style="margin-bottom:10px;">
-            <div class="ratio-label">TDS Ratio 비율</div>
-            <div class="ratio-val" id="g-tds-val">—</div>
+
+          <div class="result-section">
+            <div class="section-title">📋 기본 정보</div>
+            <div class="result-row"><span class="r-label">주택 감정가</span><span class="r-val" id="rv-r-home">—</span></div>
+            <div class="result-row"><span class="r-label">적용 LTV 한도</span><span class="r-val orange" id="rv-r-ltv">—</span></div>
+            <div class="result-row"><span class="r-label">총 대출 가능액</span><span class="r-val" id="rv-r-gross">—</span></div>
+            <div class="result-row"><span class="r-label">기존 모기지 상환</span><span class="r-val" id="rv-r-existing">—</span></div>
+            <div class="divider"></div>
+            <div class="result-row"><span class="r-label" style="font-weight:700;color:#1e3a5f;font-size:0.9rem;">실수령 대출금</span><span class="r-val orange total" id="rv-r-net">—</span></div>
           </div>
-          <div class="td-note">
-            * TD 은행 기준 <strong>GDS 39%</strong> <strong>TDS 44%</strong> 미만입니다.
+
+          <div class="divider"></div>
+
+          <div class="result-section">
+            <div class="section-title">💰 수령 방식</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px;">
+              <div style="border:2px solid #f47920;border-radius:9px;padding:12px;text-align:center;background:#fff8f2;">
+                <div style="font-size:0.72rem;font-weight:700;color:#888;margin-bottom:4px;">일시불 수령</div>
+                <div style="font-size:1.15rem;font-weight:800;color:#f47920;" id="rv-lump">—</div>
+              </div>
+              <div style="border:2px solid #1e3a5f;border-radius:9px;padding:12px;text-align:center;background:#f4f7fb;">
+                <div style="font-size:0.72rem;font-weight:700;color:#888;margin-bottom:4px;">월 정기 지급</div>
+                <div style="font-size:1.15rem;font-weight:800;color:#1e3a5f;" id="rv-monthly-pay">—</div>
+                <div style="font-size:0.68rem;color:#aaa;margin-top:2px;"><span id="rv-hold-label">15</span>년 기준</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="result-section">
+            <div class="section-title">📈 <span id="rv-hold-label2">15</span>년 후 예상 상환액</div>
+            <div class="result-row"><span class="r-label">적용 금리 (추정)</span><span class="r-val" id="rv-r-rate">—</span></div>
+            <div class="result-row"><span class="r-label">원금</span><span class="r-val" id="rv-r-principal">—</span></div>
+            <div class="result-row"><span class="r-label">누적 이자 (복리)</span><span class="r-val orange" id="rv-r-interest">—</span></div>
+            <div class="result-row"><span class="r-label" style="font-weight:700;color:#1e3a5f;">총 상환 예상액</span><span class="r-val total" id="rv-r-total-due">—</span></div>
+            <div class="divider"></div>
+            <div class="result-row"><span class="r-label">예상 주택 가치 (연 2% 상승)</span><span class="r-val" id="rv-r-home-future">—</span></div>
+            <div class="result-row"><span class="r-label" style="font-weight:700;">예상 남은 자산 (Equity)</span><span class="r-val orange total" id="rv-r-equity-left">—</span></div>
+          </div>
+
+          <div style="font-size:0.72rem;color:#aaa;background:#f5f5f5;border-radius:8px;padding:10px 12px;line-height:1.7;margin-top:8px;">
+            <strong style="color:#1e3a5f;">참고사항</strong><br>
+            • 캐나다 리버스 모기지는 CHIP (HomeEquity Bank) 또는 Equitable Bank 취급<br>
+            • 금리는 일반 모기지보다 높으며 보통 Prime + 2~3% 수준<br>
+            • 집 매각·이사·사망 시 상환 의무 발생 / 월 상환 없음<br>
+            • 이자는 원금에 복리로 누적됨
           </div>
         </div>
       </div>
     </div>
-
   </div>
+
 </div>
 
 <script>
-const cities = {
-  ON: ['Toronto','Ottawa','Mississauga','Hamilton','Brampton','London'],
-  BC: ['Vancouver','Victoria','Surrey','Burnaby','Richmond','Kelowna'],
-  AB: ['Calgary','Edmonton','Red Deer','Lethbridge','Medicine Hat'],
-  QC: ['Montreal','Quebec City','Laval','Gatineau','Sherbrooke'],
-  MB: ['Winnipeg','Brandon','Steinbach'],
-  SK: ['Saskatoon','Regina','Prince Albert'],
-  NS: ['Halifax','Dartmouth','Sydney'],
-  NB: ['Moncton','Saint John','Fredericton']
-};
+(function() {
+  var cities = {
+    ON: ['Toronto','Ottawa','Mississauga','Hamilton','Brampton','London','Kitchener','Waterloo','Cambridge','Windsor','Markham','Vaughan','Richmond Hill','Oakville','Burlington','Barrie','Sudbury','Thunder Bay','Kingston','Guelph','Oshawa','Pickering','Ajax','Whitby'],
+    BC: ['Vancouver','Victoria','Surrey','Burnaby','Richmond','Kelowna'],
+    AB: ['Calgary','Edmonton','Red Deer','Lethbridge','Medicine Hat'],
+    QC: ['Montreal','Quebec City','Laval','Gatineau','Sherbrooke'],
+    MB: ['Winnipeg','Brandon','Steinbach'],
+    SK: ['Saskatoon','Regina','Prince Albert'],
+    NS: ['Halifax','Dartmouth','Sydney'],
+    NB: ['Moncton','Saint John','Fredericton']
+  };
 
-function updateCities() {
-  const prov = document.getElementById('province').value;
-  const cityEl = document.getElementById('city');
-  cityEl.innerHTML = cities[prov].map(c => `<option>${c}</option>`).join('');
-}
-updateCities();
-
-function setTab(name, el) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('panel-' + name).classList.add('active');
-}
-
-function syncDown() {
-  const price = parseFloat(document.getElementById('price').value) || 0;
-  const pct = parseFloat(document.getElementById('downPct').value) || 0;
-  document.getElementById('downAmt').value = Math.round(price * pct / 100);
-  checkCMHC();
-}
-function pctToAmt() {
-  const price = parseFloat(document.getElementById('price').value) || 0;
-  const pct = parseFloat(document.getElementById('downPct').value) || 0;
-  document.getElementById('downAmt').value = Math.round(price * pct / 100);
-  checkCMHC();
-}
-function amtToPct() {
-  const price = parseFloat(document.getElementById('price').value) || 1;
-  const amt = parseFloat(document.getElementById('downAmt').value) || 0;
-  document.getElementById('downPct').value = ((amt / price) * 100).toFixed(1);
-  checkCMHC();
-}
-function checkCMHC() {
-  const pct = parseFloat(document.getElementById('downPct').value) || 0;
-  document.getElementById('cmhcNote').classList.toggle('show', pct < 20);
-}
-
-function fmt(n) { return '$' + Math.round(n).toLocaleString('en-CA'); }
-
-function ontarioLTT(price) {
-  let t = 0;
-  if (price > 0)       t += Math.min(price, 55000) * 0.005;
-  if (price > 55000)   t += Math.min(price - 55000, 195000) * 0.010;
-  if (price > 250000)  t += Math.min(price - 250000, 150000) * 0.015;
-  if (price > 400000)  t += Math.min(price - 400000, 1600000) * 0.020;
-  if (price > 2000000) t += (price - 2000000) * 0.025;
-  return t;
-}
-function torontoLTT(price) {
-  let t = 0;
-  if (price > 0)       t += Math.min(price, 55000) * 0.005;
-  if (price > 55000)   t += Math.min(price - 55000, 345000) * 0.010;
-  if (price > 400000)  t += Math.min(price - 400000, 600000) * 0.020;
-  if (price > 1000000) t += Math.min(price - 1000000, 1000000) * 0.025;
-  if (price > 2000000) t += (price - 2000000) * 0.030;
-  return t;
-}
-function getLTT(price, province, city) {
-  let nonFirst = 0, rebate = 0;
-  if (province === 'ON') {
-    nonFirst = ontarioLTT(price);
-    if (city === 'Toronto') nonFirst += torontoLTT(price);
-    rebate = Math.min(nonFirst, 4000);
-  } else if (province === 'BC') {
-    if (price <= 200000) nonFirst = price * 0.01;
-    else if (price <= 2000000) nonFirst = 2000 + (price - 200000) * 0.02;
-    else nonFirst = 2000 + 36000 + (price - 2000000) * 0.03;
-    rebate = price <= 500000 ? nonFirst : 0;
-  } else if (province === 'QC') {
-    if (price <= 50000) nonFirst = price * 0.005;
-    else if (price <= 250000) nonFirst = 250 + (price - 50000) * 0.010;
-    else if (price <= 500000) nonFirst = 2250 + (price - 250000) * 0.015;
-    else nonFirst = 6000 + (price - 500000) * 0.020;
-  } else { nonFirst = 0; rebate = 0; }
-  return { first: Math.max(nonFirst - rebate, 0), nonFirst };
-}
-function getCMHCRate(ltv) {
-  if (ltv <= 0.65) return 0.006;
-  if (ltv <= 0.75) return 0.017;
-  if (ltv <= 0.80) return 0.024;
-  if (ltv <= 0.85) return 0.028;
-  if (ltv <= 0.90) return 0.031;
-  return 0.040;
-}
-
-function calculate() {
-  const price   = parseFloat(document.getElementById('price').value) || 0;
-  const downAmt = parseFloat(document.getElementById('downAmt').value) || 0;
-  const annRate = parseFloat(document.getElementById('rate').value) || 0;
-  const years   = parseInt(document.getElementById('years').value) || 25;
-  const freq    = parseInt(document.getElementById('freq').value);
-  const province = document.getElementById('province').value;
-  const city    = document.getElementById('city').value;
-  if (price <= 0) return;
-
-  let loan = price - downAmt;
-  const downRatio = downAmt / price;
-  if (downRatio < 0.20 && price <= 1500000) {
-    loan += loan * getCMHCRate(loan / price);
+  function updateCities() {
+    var p = document.getElementById('province').value;
+    var opts = cities[p].map(function(c){ return '<option>'+c+'</option>'; }).join('');
+    document.getElementById('city').innerHTML = opts;
   }
 
-  const semi = annRate / 100 / 2;
-  const effAnnual = Math.pow(1 + semi, 2) - 1;
-  const perRate = Math.pow(1 + effAnnual, 1 / freq) - 1;
-  const n = years * freq;
-  const payment = perRate === 0 ? loan / n : loan * (perRate * Math.pow(1+perRate,n)) / (Math.pow(1+perRate,n)-1);
-  const totalPaid = payment * n;
-  const totalInterest = totalPaid - loan;
-
-  let bal = loan, fyP = 0, fyI = 0;
-  for (let i = 0; i < freq; i++) {
-    const int = bal * perRate; const pr = payment - int;
-    fyI += int; fyP += pr; bal -= pr;
+  function setTab(name, el) {
+    document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+    el.classList.add('active');
+    document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+    document.getElementById('panel-'+name).classList.add('active');
   }
 
-  const { first, nonFirst } = getLTT(price, province, city);
-  const labels = { 12:'per month', 24:'per half-month', 26:'bi-weekly', 52:'per week' };
+  function updateMortgage() {
+    var p = parseFloat(document.getElementById('price').value)||0;
+    var a = parseFloat(document.getElementById('downAmt').value)||0;
+    document.getElementById('mortgageAmt').value = Math.max(0, Math.round(p-a));
+  }
 
-  document.getElementById('placeholder').style.display = 'none';
-  document.getElementById('results').style.display = 'block';
-  document.getElementById('rMonthly').textContent = fmt(payment);
-  document.getElementById('rFreqLabel').textContent = labels[freq] || 'per period';
-  document.getElementById('rLttFirst').textContent = fmt(first);
-  document.getElementById('rLttNon').textContent = fmt(nonFirst);
-  document.getElementById('rFyPrincipal').textContent = fmt(fyP);
-  document.getElementById('rFyInterest').textContent = fmt(fyI);
-  document.getElementById('rFyTotal').textContent = fmt(fyP + fyI);
-  document.getElementById('rTotalPrincipal').textContent = fmt(loan);
-  document.getElementById('rTotalInterest').textContent = fmt(totalInterest);
-  document.getElementById('rTotal').textContent = fmt(totalPaid);
-}
+  function syncDown() {
+    var p = parseFloat(document.getElementById('price').value)||0;
+    var pct = parseFloat(document.getElementById('downPct').value)||0;
+    document.getElementById('downAmt').value = Math.round(p*pct/100);
+    checkCMHC(); updateMortgage();
+  }
+  function pctToAmt() {
+    var p = parseFloat(document.getElementById('price').value)||0;
+    var pct = parseFloat(document.getElementById('downPct').value)||0;
+    document.getElementById('downAmt').value = Math.round(p*pct/100);
+    checkCMHC(); updateMortgage();
+  }
+  function amtToPct() {
+    var p = parseFloat(document.getElementById('price').value)||1;
+    var a = parseFloat(document.getElementById('downAmt').value)||0;
+    document.getElementById('downPct').value = ((a/p)*100).toFixed(1);
+    checkCMHC(); updateMortgage();
+  }
+  function checkCMHC() {
+    var pct = parseFloat(document.getElementById('downPct').value)||0;
+    document.getElementById('cmhcNote').classList.toggle('show', pct < 20);
+  }
+  function applyAmortPreset() {
+    var val = document.getElementById('amort-preset').value;
+    if (val) document.getElementById('years').value = val;
+  }
 
-// ===== GDS / TDS Calculator =====
-function calcGDS() {
-  const salary  = parseFloat(document.getElementById('g-salary').value) || 0;
-  const loan    = parseFloat(document.getElementById('g-loan').value) || 0;
-  const rate    = parseFloat(document.getElementById('g-rate').value) || 0;
-  const yrs     = parseInt(document.getElementById('g-years').value) || 25;
-  const maintain = parseFloat(document.getElementById('g-maintain').value) || 0;
-  const heating  = parseFloat(document.getElementById('g-heating').value) || 0;
-  const propTax  = parseFloat(document.getElementById('g-tax').value) || 0;
-  const other    = parseFloat(document.getElementById('g-other').value) || 0;
+  function fmt(n){ return '$'+Math.round(n).toLocaleString('en-CA'); }
+  function fmt2(n){ return n.toLocaleString('en-CA',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function fmtC(n){ return '$'+Math.round(n).toLocaleString('en-CA'); }
 
-  const monthly = salary / 12;
-  document.getElementById('g-monthly-display').textContent = Math.round(monthly).toLocaleString('en-CA');
+  function getCMHCRate(ltv) {
+    if (ltv <= 0.65) return 0.006;
+    if (ltv <= 0.75) return 0.017;
+    if (ltv <= 0.80) return 0.024;
+    if (ltv <= 0.85) return 0.028;
+    if (ltv <= 0.90) return 0.031;
+    return 0.040;
+  }
 
-  // Stress test: rate + 2%
-  const stressRate = (rate + 2) / 100;
-  const semi = stressRate / 2;
-  const effAnnual = Math.pow(1 + semi, 2) - 1;
-  const perRate = Math.pow(1 + effAnnual, 1/12) - 1;
-  const n = yrs * 12;
-  const mortgagePayment = perRate === 0 ? loan / n : loan * (perRate * Math.pow(1+perRate,n)) / (Math.pow(1+perRate,n)-1);
+  function ontarioLTT(p) {
+    var t=0;
+    if(p>0)       t+=Math.min(p,55000)*0.005;
+    if(p>55000)   t+=Math.min(p-55000,195000)*0.01;
+    if(p>250000)  t+=Math.min(p-250000,150000)*0.015;
+    if(p>400000)  t+=Math.min(p-400000,1600000)*0.02;
+    if(p>2000000) t+=(p-2000000)*0.025;
+    return t;
+  }
+  function torontoLTT(p) {
+    var t=0;
+    if(p>0)       t+=Math.min(p,55000)*0.005;
+    if(p>55000)   t+=Math.min(p-55000,345000)*0.01;
+    if(p>400000)  t+=Math.min(p-400000,600000)*0.02;
+    if(p>1000000) t+=Math.min(p-1000000,1000000)*0.025;
+    if(p>2000000) t+=(p-2000000)*0.03;
+    return t;
+  }
+  function getLTT(price,prov,city) {
+    var nf=0,rb=0;
+    if(prov==='ON'){
+      nf=ontarioLTT(price);
+      if(city==='Toronto') nf+=torontoLTT(price);
+      rb=Math.min(nf,4000);
+    } else if(prov==='BC'){
+      if(price<=200000) nf=price*0.01;
+      else if(price<=2000000) nf=2000+(price-200000)*0.02;
+      else nf=38000+(price-2000000)*0.03;
+      rb=price<=500000?nf:0;
+    } else if(prov==='QC'){
+      if(price<=50000) nf=price*0.005;
+      else if(price<=250000) nf=250+(price-50000)*0.01;
+      else if(price<=500000) nf=2250+(price-250000)*0.015;
+      else nf=6000+(price-500000)*0.02;
+    }
+    return {first:Math.max(nf-rb,0),nonFirst:nf};
+  }
 
-  const gdsNumerator = mortgagePayment + maintain + heating + propTax;
-  const tdsNumerator = gdsNumerator + other;
-  const gds = (gdsNumerator / monthly) * 100;
-  const tds = (tdsNumerator / monthly) * 100;
+  function calculate() {
+    var price=parseFloat(document.getElementById('price').value)||0;
+    var downAmt=parseFloat(document.getElementById('downAmt').value)||0;
+    var annRate=parseFloat(document.getElementById('rate').value)||0;
+    var years=parseInt(document.getElementById('years').value)||25;
+    var freq=parseInt(document.getElementById('freq').value);
+    var prov=document.getElementById('province').value;
+    var city=document.getElementById('city').value;
+    if(price<=0) return;
+    var loan=price-downAmt;
+    if(downAmt/price<0.20 && price<=1500000) loan+=loan*getCMHCRate(loan/price);
+    var semi=annRate/100/2, eff=Math.pow(1+semi,2)-1;
+    var pr=Math.pow(1+eff,1/freq)-1, n=years*freq;
+    var pmt=pr===0?loan/n:loan*(pr*Math.pow(1+pr,n))/(Math.pow(1+pr,n)-1);
+    var bal=loan,fyP=0,fyI=0;
+    for(var i=0;i<freq;i++){var ia=bal*pr,pp=pmt-ia;fyI+=ia;fyP+=pp;bal-=pp;}
+    var ltt=getLTT(price,prov,city);
+    var labels={12:'per month',24:'per half-month',26:'bi-weekly',52:'per week'};
+    document.getElementById('placeholder').style.display='none';
+    document.getElementById('results').style.display='block';
+    document.getElementById('rMonthly').textContent=fmt(pmt);
+    document.getElementById('rFreqLabel').textContent=labels[freq]||'per period';
+    document.getElementById('rLttFirst').textContent=fmt(ltt.first);
+    document.getElementById('rLttNon').textContent=fmt(ltt.nonFirst);
+    document.getElementById('rFyPrincipal').textContent=fmt(fyP);
+    document.getElementById('rFyInterest').textContent=fmt(fyI);
+    document.getElementById('rFyTotal').textContent=fmt(fyP+fyI);
+    document.getElementById('rTotalPrincipal').textContent=fmt(loan);
+    document.getElementById('rTotalInterest').textContent=fmt(pmt*n-loan);
+    document.getElementById('rTotal').textContent=fmt(pmt*n);
+  }
 
-  const gdsEl = document.getElementById('g-gds-val');
-  const tdsEl = document.getElementById('g-tds-val');
+  function calcGDS() {
+    var salary=parseFloat(document.getElementById('g-salary').value)||0;
+    var loan=parseFloat(document.getElementById('g-loan').value)||0;
+    var rate=parseFloat(document.getElementById('g-rate').value)||0;
+    var yrs=parseInt(document.getElementById('g-years').value)||25;
+    var maintain=parseFloat(document.getElementById('g-maintain').value)||0;
+    var heating=parseFloat(document.getElementById('g-heating').value)||0;
+    var propTax=parseFloat(document.getElementById('g-tax').value)||0;
+    var other=parseFloat(document.getElementById('g-other').value)||0;
+    var monthly=salary/12;
+    document.getElementById('g-monthly-display').textContent=Math.round(monthly).toLocaleString('en-CA');
+    var sr=(rate+2)/100,semi=sr/2,eff=Math.pow(1+semi,2)-1;
+    var pr=Math.pow(1+eff,1/12)-1,n=yrs*12;
+    var pmt=pr===0?loan/n:loan*(pr*Math.pow(1+pr,n))/(Math.pow(1+pr,n)-1);
+    var gdsNum=pmt+maintain+heating+propTax,tdsNum=gdsNum+other;
+    var gds=gdsNum/monthly*100,tds=tdsNum/monthly*100;
+    var gE=document.getElementById('g-gds-val'),tE=document.getElementById('g-tds-val');
+    gE.textContent=gds.toFixed(2)+'%'; tE.textContent=tds.toFixed(2)+'%';
+    gE.className='ratio-val'+(gds>=39?' danger':gds>=35?' warn':'');
+    tE.className='ratio-val'+(tds>=44?' danger':tds>=40?' warn':'');
+  }
 
-  gdsEl.textContent = gds.toFixed(2) + '%';
-  tdsEl.textContent = tds.toFixed(2) + '%';
+  function v(id){ return parseFloat(document.getElementById(id).value)||0; }
 
-  gdsEl.className = 'ratio-val' + (gds >= 39 ? ' danger' : gds >= 35 ? ' warn' : '');
-  tdsEl.className = 'ratio-val' + (tds >= 44 ? ' danger' : tds >= 40 ? ' warn' : '');
-}
+  function autoMonthly(aId,mId){
+    var amt=v(aId);
+    if(amt>0) document.getElementById(mId).value=Math.round(amt*0.03);
+  }
 
-// Auto-calculate GDS on load
-calcGDS();
+  function calcDebt(){
+    var total=v('cc-monthly')+v('cc-limit-m')+v('pl-monthly')+v('al-monthly')+
+      v('sloc-monthly')+v('uloc-monthly')+v('ali-monthly')+v('cs-monthly')+v('oth-monthly');
+    document.getElementById('debt-total').textContent=fmt(total);
+  }
+
+  function calcIncome(){
+    var hA=v('i-hourly')*v('i-hours')*52;
+    document.getElementById('i-hourly-annual').textContent=Math.round(hA).toLocaleString('en-CA');
+    var wA=v('i-weekly')*52; document.getElementById('i-weekly-annual').textContent=Math.round(wA).toLocaleString('en-CA');
+    var bA=v('i-biweekly')*26; document.getElementById('i-biweekly-annual').textContent=Math.round(bA).toLocaleString('en-CA');
+    var sA=v('i-semimonthly')*24; document.getElementById('i-semimonthly-annual').textContent=Math.round(sA).toLocaleString('en-CA');
+    var mA=v('i-monthly-pay')*12; document.getElementById('i-monthly-annual').textContent=Math.round(mA).toLocaleString('en-CA');
+    var dA=v('i-direct-annual');
+    var auto=hA+wA+bA+sA+mA+dA;
+    document.getElementById('i-manual-total').value=Math.round(auto);
+    var o1=v('i-other1')*12; document.getElementById('i-other1-annual').textContent=Math.round(o1).toLocaleString('en-CA');
+    var ccb=v('i-ccb')*12; document.getElementById('i-ccb-annual').textContent=Math.round(ccb).toLocaleString('en-CA');
+    var o2=v('i-other2')*12; document.getElementById('i-other2-annual').textContent=Math.round(o2).toLocaleString('en-CA');
+    var ot=o1+ccb+o2; document.getElementById('i-other-total').textContent=Math.round(ot).toLocaleString('en-CA');
+    var grand=auto+ot;
+    document.getElementById('i-grand-total').textContent=Math.round(grand).toLocaleString('en-CA');
+    document.getElementById('i-sum-annual').textContent=fmt(grand);
+    document.getElementById('i-sum-monthly').textContent=fmt(grand/12);
+  }
+
+  function calcFixed(){
+    var tF=v('f-townhouse-fee')*0.5,cF=v('f-condo-fee')*0.5;
+    var cT=v('f-condo-tax')/12,hT=v('f-house-tax')/12,ht=v('f-heating');
+    document.getElementById('f-townhouse-fee-m').textContent=fmt2(tF);
+    document.getElementById('f-condo-fee-m').textContent=fmt2(cF);
+    document.getElementById('f-condo-tax-m').textContent=fmt2(cT);
+    document.getElementById('f-house-tax-m').textContent=fmt2(hT);
+    document.getElementById('f-heating-m').textContent=fmt2(ht);
+    document.getElementById('fixed-total').textContent=fmt(tF+cF+cT+hT+ht);
+  }
+
+  /* ── 최소 다운페이 ── */
+  var mdRates = {r1:5, r2:10};
+
+  function calcMinDown(){
+    var price = parseFloat(document.getElementById('md-price').value)||0;
+    var inp1 = document.getElementById('md-rate-1');
+    var inp2 = document.getElementById('md-rate-2');
+    if(inp1) mdRates.r1 = parseFloat(inp1.value)||0;
+    if(inp2) mdRates.r2 = parseFloat(inp2.value)||0;
+
+    var tbody = document.getElementById('md-tbody');
+    tbody.innerHTML = '';
+
+    function makeRateInput(idStr,val){
+      return '<div style="display:inline-flex;align-items:center;gap:3px;">'+
+        '<input id="'+idStr+'" type="number" value="'+val+'" min="0" max="100" step="0.5"'+
+        ' style="width:58px;border:1.5px solid #f4d0b0;border-radius:6px;padding:4px 6px;font-size:0.82rem;font-weight:700;color:#f47920;background:#fff8f2;text-align:center;-moz-appearance:textfield;outline:none;"'+
+        ' oninput="calcMinDown()">'+
+        '<span style="font-size:0.8rem;color:#f47920;font-weight:700;">%</span></div>';
+    }
+
+    var d1 = 500000*(mdRates.r1/100);
+    var tr1 = document.createElement('tr');
+    tr1.innerHTML='<td>첫 $500,000</td><td>'+fmtC(500000)+'</td><td style="text-align:center;">'+makeRateInput('md-rate-1',mdRates.r1)+'</td><td>'+fmtC(d1)+'</td>';
+    tbody.appendChild(tr1);
+
+    var tier2 = price>500000 ? price-500000 : 0;
+    var d2 = tier2*(mdRates.r2/100);
+    var tr2 = document.createElement('tr');
+    tr2.innerHTML='<td>$500,000 초과 나머지</td><td>'+fmtC(tier2)+'</td><td style="text-align:center;">'+makeRateInput('md-rate-2',mdRates.r2)+'</td><td>'+fmtC(d2)+'</td>';
+    tbody.appendChild(tr2);
+
+    var totalDown = d1+d2;
+    var baseMortgage = price - totalDown;
+    var downPct = price>0 ? totalDown/price*100 : 0;
+
+    document.getElementById('md-show-price').textContent  = price>0 ? fmtC(price) : '$0';
+    document.getElementById('md-total-down').textContent  = fmtC(totalDown);
+    document.getElementById('md-pct').textContent         = price>0 ? downPct.toFixed(2)+'%' : '—';
+    document.getElementById('md-mortgage').textContent    = price>0 ? fmtC(baseMortgage) : '$0';
+
+    // CMHC 섹션
+    var sec = document.getElementById('md-cmhc-section');
+    if(price<=0){ sec.innerHTML=''; return; }
+
+    if(downPct >= 20){
+      sec.innerHTML = '<div class="cmhc-na">✅ 다운페이먼트 20% 이상 — CMHC 보험료 없음</div>';
+    } else {
+      var ltv = baseMortgage / price;
+      var cmhcRate = getCMHCRate(ltv);
+      var cmhcAmt  = baseMortgage * cmhcRate;
+      var totalMortgage = baseMortgage + cmhcAmt;
+
+      sec.innerHTML =
+        '<div class="cmhc-box">'+
+          '<div class="cmhc-box-header">'+
+            '<span>🏛️ CMHC 모기지 보험료</span>'+
+            '<span style="background:#f47920;border-radius:6px;padding:2px 10px;font-size:0.8rem;">'+(cmhcRate*100).toFixed(1)+'% 적용</span>'+
+          '</div>'+
+          '<div class="cmhc-row"><span class="r-label">CMHC 보험료율</span><span class="r-val orange">'+(cmhcRate*100).toFixed(1)+'%</span></div>'+
+          '<div class="cmhc-row"><span class="r-label">CMHC 보험료 금액</span><span class="r-val orange">'+fmtC(cmhcAmt)+'</span></div>'+
+          '<div class="cmhc-row total-row"><span class="r-label">✅ 보험료 포함 총 모기지</span><span class="r-val">'+fmtC(totalMortgage)+'</span></div>'+
+        '</div>'+
+        '<div style="background:#fff3e8;border:1.5px solid #f4d0b0;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:0.78rem;color:#555;line-height:1.7;">'+
+          '<strong style="color:#1e3a5f;">CMHC 보험료율 기준표</strong><br>'+
+          '• LTV 65% 이하: 0.60% &nbsp;|&nbsp; 65~75%: 1.70%<br>'+
+          '• LTV 75~80%: 2.40% &nbsp;|&nbsp; 80~85%: 2.80%<br>'+
+          '• LTV 85~90%: 3.10% &nbsp;|&nbsp; 90~95%: 4.00%'+
+        '</div>';
+    }
+  }
+
+  /* ── Rate Banner ── */
+  function fetchRates(){
+    var btn=document.querySelector('#rate-banner button');
+    btn.textContent='...';
+    fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,
+        tools:[{type:'web_search_20250305',name:'web_search'}],
+        messages:[{role:'user',content:'What is Canada prime rate and Bank of Canada policy rate today? Reply ONLY with JSON: {"prime":"4.45","boc":"2.25"}'}]})
+    })
+    .then(function(r){return r.json();})
+    .then(function(data){
+      var text=data.content.filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('');
+      var m=text.match(/\{[^}]+\}/);
+      if(m){
+        var d=JSON.parse(m[0]);
+        if(d.prime) document.getElementById('banner-prime').textContent=d.prime+'%';
+        if(d.boc)   document.getElementById('banner-boc').textContent=d.boc+'%';
+        var now=new Date();
+        document.getElementById('banner-updated').textContent='기준: '+now.getFullYear()+'년 '+(now.getMonth()+1)+'월 '+now.getDate()+'일';
+      }
+      btn.textContent='새로고침';
+    })
+    .catch(function(){btn.textContent='새로고침';});
+  }
+
+  function calcPrimeAdj(){
+    var base=parseFloat(document.getElementById('banner-prime').textContent)||4.45;
+    document.getElementById('calc-prime-base').textContent=base+'%';
+    var adj=parseFloat(document.getElementById('prime-adjustment').value);
+    if(isNaN(adj)){document.getElementById('prime-result').textContent='—';return;}
+    document.getElementById('prime-result').textContent=(base+adj).toFixed(2)+'%';
+  }
+
+  function calcAfford() {
+    var down = parseFloat(document.getElementById('af-down').value) || 0;
+    if (down <= 0) return;
+
+    // 5% 다운: price = down / 0.05, but capped at $500K for pure 5%
+    // For 5%: if price <= 500K → down = price * 0.05 → price = down / 0.05
+    // But if price > 500K, min down = 500K*0.05 + (price-500K)*0.10
+    // Solve: down = 25000 + (price-500000)*0.10 → price = (down-25000)/0.10 + 500000
+    var price5;
+    if (down <= 25000) {
+      price5 = down / 0.05; // pure 5% zone
+    } else {
+      price5 = (down - 25000) / 0.10 + 500000;
+    }
+    price5 = Math.min(price5, 999999); // CMHC max
+
+    // 10% 다운: same formula but starting from 10%
+    // min down for 10%: 500K*0.05 + (price-500K)*0.10 but user puts 10% flat
+    // We use flat 10%: price = down / 0.10
+    var price10 = down / 0.10;
+    price10 = Math.min(price10, 999999);
+
+    // 20% 다운: price = down / 0.20, no CMHC cap
+    var price20 = down / 0.20;
+
+    function cmhcAmt(price, downAmt) {
+      if (price <= 0) return 0;
+      var base = price - downAmt;
+      var ltv = base / price;
+      return base * getCMHCRate(ltv);
+    }
+
+    var down5  = price5 * 0.05 > 25000 ? 25000 + (price5 - 500000) * 0.10 : price5 * 0.05;
+    // recalc actual down for price5
+    down5 = down; // user's actual down
+    var base5  = price5 - down5;
+    var c5     = base5 * getCMHCRate(base5 / price5);
+    var total5 = base5 + c5;
+
+    var base10  = price10 - down;
+    var c10     = base10 * getCMHCRate(base10 / price10);
+    var total10 = base10 + c10;
+
+    var base20  = price20 - down;
+    var total20 = base20; // no CMHC
+
+    document.getElementById('af-price-5').textContent    = fmtC(price5);
+    document.getElementById('af-price-10').textContent   = fmtC(price10);
+    document.getElementById('af-price-20').textContent   = fmtC(price20);
+    document.getElementById('af-mortgage-5').textContent  = fmtC(base5);
+    document.getElementById('af-mortgage-10').textContent = fmtC(base10);
+    document.getElementById('af-mortgage-20').textContent = fmtC(base20);
+    document.getElementById('af-cmhc-5').textContent      = fmtC(c5);
+    document.getElementById('af-cmhc-10').textContent     = fmtC(c10);
+    document.getElementById('af-total-5').textContent     = fmtC(total5);
+    document.getElementById('af-total-10').textContent    = fmtC(total10);
+    document.getElementById('af-total-20').textContent    = fmtC(total20);
+
+    var pct5  = (down / price5 * 100).toFixed(1) + '%';
+    var pct10 = (down / price10 * 100).toFixed(1) + '%';
+    var pct20 = (down / price20 * 100).toFixed(1) + '%';
+    document.getElementById('af-pct-5').textContent  = pct5;
+    document.getElementById('af-pct-10').textContent = pct10;
+    document.getElementById('af-pct-20').textContent = pct20;
+
+    var note = '';
+    if (price5 >= 999999) note += '⚠️ 5% 다운은 $999,999 이하 주택에만 적용 (CMHC 한도)<br>';
+    if (price10 >= 999999) note += '⚠️ 10% 다운도 $999,999 이하 주택에만 적용<br>';
+    if (price20 >= 1000000) note += '✅ 20% 다운 시 $1M 이상 주택 구매 가능 (CMHC 불필요)';
+    document.getElementById('af-note').innerHTML = note;
+  }
+  window.calcAfford = calcAfford;
+
+  /* ── Reverse Mortgage ── */
+  var rvCities = {
+    ON: ['Toronto','Ottawa','Mississauga','Hamilton','Brampton','London','Kitchener','Waterloo','Cambridge','Windsor','Markham','Vaughan','Richmond Hill','Oakville','Burlington','Barrie','Guelph','Oshawa'],
+    BC: ['Vancouver','Victoria','Surrey','Burnaby','Richmond','Kelowna'],
+    AB: ['Calgary','Edmonton','Red Deer','Lethbridge'],
+    QC: ['Montreal','Quebec City','Laval','Gatineau','Sherbrooke'],
+    MB: ['Winnipeg','Brandon'],
+    SK: ['Saskatoon','Regina'],
+    NS: ['Halifax','Dartmouth','Sydney'],
+    NB: ['Moncton','Saint John','Fredericton'],
+    NL: ['St. John\'s','Corner Brook'],
+    PE: ['Charlottetown']
+  };
+
+  function updateRvCities() {
+    var p = document.getElementById('rv-province').value;
+    var cityList = rvCities[p] || [];
+    var opts = '<option value="">Select</option>' + cityList.map(function(c){ return '<option>'+c+'</option>'; }).join('');
+    document.getElementById('rv-city').innerHTML = opts;
+    calcReverse();
+  }
+
+  function getRvLTV(age) {
+    // LTV increases with age; approximate CHIP schedule
+    if (age < 55) return 0;
+    if (age <= 59) return 0.15;
+    if (age <= 64) return 0.25;
+    if (age <= 69) return 0.35;
+    if (age <= 74) return 0.45;
+    if (age <= 79) return 0.50;
+    if (age <= 84) return 0.55;
+    return 0.55;
+  }
+
+  function calcReverse() {
+    var age      = parseInt(document.getElementById('rv-age').value) || 0;
+    var homeVal  = parseFloat(document.getElementById('rv-home-value').value) || 0;
+    var existing = parseFloat(document.getElementById('rv-existing').value) || 0;
+    var holdYrs  = parseInt(document.getElementById('rv-hold-years').value) || 15;
+
+    if (age < 55 || homeVal <= 0) {
+      document.getElementById('rv-placeholder').style.display = '';
+      document.getElementById('rv-result').style.display = 'none';
+      return;
+    }
+
+    var ltv      = getRvLTV(age);
+    var gross    = homeVal * ltv;
+    var net      = Math.max(0, gross - existing);
+    // Reverse mortgage rate: roughly Prime + 2.5% ≈ 6.95% semi-annual compounding
+    var annualRate = (parseFloat(document.getElementById('banner-prime').textContent) || 4.45) + 2.5;
+    // Semi-annual compounding → effective annual rate
+    var effectiveRate = Math.pow(1 + (annualRate/100)/2, 2) - 1;
+
+    // Future balance after holdYrs (compound, no payments)
+    var futureBalance = net * Math.pow(1 + effectiveRate, holdYrs);
+    var totalInterest = futureBalance - net;
+
+    // Monthly payout: distribute net over holdYrs months
+    var months = holdYrs * 12;
+    var monthlyPay = months > 0 ? net / months : 0;
+
+    // Future home value (2% annual appreciation)
+    var futureHome = homeVal * Math.pow(1.02, holdYrs);
+    var equityLeft = futureHome - futureBalance;
+
+    // Update hold year labels
+    document.getElementById('rv-hold-label').textContent  = holdYrs;
+    document.getElementById('rv-hold-label2').textContent = holdYrs;
+
+    document.getElementById('rv-max-loan').textContent   = fmtC(gross);
+    document.getElementById('rv-ltv-pct').textContent    = (ltv*100).toFixed(0) + '%';
+    document.getElementById('rv-r-home').textContent     = fmtC(homeVal);
+    document.getElementById('rv-r-ltv').textContent      = (ltv*100).toFixed(0) + '%';
+    document.getElementById('rv-r-gross').textContent    = fmtC(gross);
+    document.getElementById('rv-r-existing').textContent = existing > 0 ? '-' + fmtC(existing) : '없음';
+    document.getElementById('rv-r-net').textContent      = fmtC(net);
+    document.getElementById('rv-lump').textContent       = fmtC(net);
+    document.getElementById('rv-monthly-pay').textContent= fmtC(monthlyPay) + '/월';
+    document.getElementById('rv-r-rate').textContent     = annualRate.toFixed(2) + '%';
+    document.getElementById('rv-r-principal').textContent   = fmtC(net);
+    document.getElementById('rv-r-interest').textContent    = fmtC(totalInterest);
+    document.getElementById('rv-r-total-due').textContent   = fmtC(futureBalance);
+    document.getElementById('rv-r-home-future').textContent = fmtC(futureHome);
+    document.getElementById('rv-r-equity-left').textContent = equityLeft > 0 ? fmtC(equityLeft) : '자산 부족 위험';
+
+    document.getElementById('rv-placeholder').style.display = 'none';
+    document.getElementById('rv-result').style.display = 'block';
+  }
+  window.calcReverse = calcReverse;
+  window.updateRvCities = updateRvCities;
+
+  window.setTab=setTab; window.updateCities=updateCities;
+  window.syncDown=syncDown; window.pctToAmt=pctToAmt; window.amtToPct=amtToPct;
+  window.applyAmortPreset=applyAmortPreset; window.calculate=calculate;
+  function applyPropType() {
+    var type = document.getElementById('g-prop-type').value;
+    var presets = {
+      condo:      { maintain: 250, heating: 100, tax: 250, sub: '월 콘도 fee의 50%' },
+      townhouse:  { maintain: 100, heating: 100, tax: 400, sub: '타운하우스 관리비' },
+      house:      { maintain: 0,   heating: 100, tax: 400, sub: '해당 없음' }
+    };
+    var p = presets[type];
+    document.getElementById('g-maintain').value = p.maintain;
+    document.getElementById('g-heating').value  = p.heating;
+    document.getElementById('g-tax').value      = p.tax;
+    document.getElementById('g-maintain-sub').textContent = p.sub;
+    calcGDS();
+  }
+  window.applyPropType = applyPropType;
+  function calcSqft() {
+    var sqft  = parseFloat(document.getElementById('sqft-size').value) || 0;
+    var price = parseFloat(document.getElementById('sqft-price').value) || 0;
+    var el    = document.getElementById('sqft-result');
+    if (sqft > 0 && price > 0) {
+      el.textContent = '$' + Math.round(sqft * price).toLocaleString();
+    } else {
+      el.textContent = '—';
+    }
+  }
+  window.calcSqft = calcSqft;
+
+  window.calcGDS=calcGDS; window.autoMonthly=autoMonthly; window.calcDebt=calcDebt;
+  window.calcIncome=calcIncome; window.calcFixed=calcFixed; window.calcMinDown=calcMinDown;
+  window.fetchRates=fetchRates; window.calcPrimeAdj=calcPrimeAdj;
+
+  updateCities(); updateMortgage();
+  document.getElementById('province').addEventListener('change',updateCities);
+  document.getElementById('amort-preset').addEventListener('change',applyAmortPreset);
+  calcGDS(); calcDebt(); calcIncome(); calcFixed(); calcMinDown(); calcReverse();
+})();
 </script>
 </body>
 </html>
