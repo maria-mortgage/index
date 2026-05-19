@@ -2,12 +2,28 @@
 <html lang="en">
 <head>
   <script>
+    // 페이지가 로드되기 전에 즉시 실행
     const password = "2480";
 
+    // 먼저 body 전체를 숨김
+    document.addEventListener("DOMContentLoaded", function() {
+      document.body.style.visibility = "hidden";
+    });
+
+    // 비밀번호 확인
     let userInput = prompt("비밀번호를 입력하세요");
 
-    if (userInput !== password) {
-      document.body.innerHTML = "<h1>접근 불가</h1>";
+    if (userInput === password) {
+      // 맞으면 페이지 보여줌
+      document.addEventListener("DOMContentLoaded", function() {
+        document.body.style.visibility = "visible";
+      });
+    } else {
+      // 틀리거나 취소하면 차단
+      document.addEventListener("DOMContentLoaded", function() {
+        document.body.innerHTML = "<h1>접근 불가</h1>";
+        document.body.style.visibility = "visible";
+      });
     }
   </script>
 <meta charset="UTF-8">
