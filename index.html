@@ -11,6 +11,18 @@
 
   window.addEventListener('DOMContentLoaded', function () {
     var PASSWORD = '2480';
+    var STORAGE_KEY = 'mc_auth_expiry';
+    var TWO_HOURS = 2 * 60 * 60 * 1000;
+
+    // 2시간 이내에 인증한 기록이 있으면 바로 통과
+    try {
+      var expiry = localStorage.getItem(STORAGE_KEY);
+      if (expiry && Date.now() < parseInt(expiry, 10)) {
+        document.documentElement.style.visibility = 'visible';
+        return;
+      }
+    } catch(e) {}
+
     var overlay = document.createElement('div');
     overlay.id = 'pw-overlay';
     overlay.style.cssText = [
@@ -54,6 +66,10 @@
 
     function checkPassword() {
       if (input.value === PASSWORD) {
+        // 인증 성공: 만료 시간 저장 (현재 + 2시간)
+        try {
+          localStorage.setItem(STORAGE_KEY, (Date.now() + TWO_HOURS).toString());
+        } catch(e) {}
         overlay.remove();
       } else {
         error.textContent = '비밀번호가 틀렸습니다. 다시 입력해주세요.';
@@ -84,7 +100,7 @@ body {
 h1 { font-size: 1.1rem; font-weight: 700; color: #1e3a5f; margin-bottom: 14px; }
 .tabs { display: flex; gap: 0; flex-wrap: wrap; margin-bottom: 0; }
 .tab {
-  padding: 10px 18px; font-size: 0.75rem; font-weight: 700;
+  padding: 10px 18px; font-size: 0.95rem; font-weight: 700;
   letter-spacing: 0.6px; text-transform: uppercase; cursor: pointer;
   border: none; border-radius: 8px 8px 0 0;
   background: #d8dce6; color: #666; transition: background 0.2s, color 0.2s;
@@ -167,7 +183,7 @@ select { padding: 9px 10px; appearance: none; background-image: url("data:image/
 .debt-table td { padding: 6px 8px; border-bottom: 1px solid #eee; vertical-align: middle; }
 .debt-table td:first-child { font-weight: 600; color: #333; width: 160px; }
 .debt-table td.sub { font-size: 0.72rem; color: #888; }
-.debt-table input { width: 100%; border: 1.5px solid #dde0e8; border-radius: 6px; padding: 6px 8px; font-size: 0.82rem; color: #1a1a1a; outline: none; background: #fff7f0; -moz-appearance: textfield; text-align: right; transition: border-color 0.2s; }
+.debt-table input { width: 100%; border: 1.5px solid #dde0e8; border-radius: 6px; padding: 8px 10px; font-size: 1rem; font-weight: 700; color: #1e3a5f; outline: none; background: #fff7f0; -moz-appearance: textfield; text-align: right; transition: border-color 0.2s; }
 .debt-table input::-webkit-inner-spin-button { -webkit-appearance: none; }
 .debt-table input:focus { border-color: #f47920; }
 .debt-total-box { display: flex; justify-content: flex-end; align-items: center; gap: 16px; margin-top: 14px; padding: 12px 16px; background: #fff3e8; border-radius: 9px; border: 1.5px solid #f4d0b0; }
@@ -178,7 +194,7 @@ select { padding: 9px 10px; appearance: none; background-image: url("data:image/
 .income-table th { background: #f0f2f7; font-size: 0.73rem; font-weight: 700; color: #444; padding: 8px 10px; text-align: left; border-bottom: 2px solid #dde0e8; }
 .income-table td { padding: 6px 8px; border-bottom: 1px solid #eee; vertical-align: middle; }
 .income-table td:first-child { font-weight: 600; color: #333; width: 180px; }
-.income-table input { width: 100%; border: 1.5px solid #dde0e8; border-radius: 6px; padding: 6px 8px; font-size: 0.82rem; color: #1a1a1a; outline: none; background: #fff7f0; -moz-appearance: textfield; text-align: right; transition: border-color 0.2s; }
+.income-table input { width: 100%; border: 1.5px solid #dde0e8; border-radius: 6px; padding: 8px 10px; font-size: 1rem; font-weight: 700; color: #1e3a5f; outline: none; background: #fff7f0; -moz-appearance: textfield; text-align: right; transition: border-color 0.2s; }
 .income-table input::-webkit-inner-spin-button { -webkit-appearance: none; }
 .income-table input:focus { border-color: #f47920; }
 .income-table input.plain { background: #fff; }
@@ -240,7 +256,64 @@ select { padding: 9px 10px; appearance: none; background-image: url("data:image/
 @media (max-width: 640px) {
   .two-col, .gds-wrap, .income-summary { grid-template-columns: 1fr; }
   .form-panel { border-right: none; border-bottom: 1px solid #eee; }
-  .tab { padding: 8px 12px; font-size: 0.7rem; }
+  .tab { padding: 9px 13px; font-size: 0.85rem; }
+
+  /* 패널 내부 글씨 크기 확대 */
+  .field-label { font-size: 0.92rem; }
+  input[type="number"], select { font-size: 1rem; padding: 10px 34px 10px 28px; }
+  .input-wrap .pre, .input-wrap .suf { font-size: 0.95rem; }
+  .amort-preset { font-size: 0.88rem; }
+  .calc-btn { font-size: 1rem; padding: 13px 44px; }
+  .tos { font-size: 0.78rem; }
+
+  /* 결과 패널 */
+  .m-label { font-size: 0.95rem; }
+  .m-amount { font-size: 2rem; }
+  .m-freq { font-size: 0.85rem; }
+  .section-title { font-size: 0.92rem; }
+  .result-row { font-size: 0.92rem; }
+  .r-val.total { font-size: 1rem; }
+  .placeholder { font-size: 0.95rem; }
+  .cmhc-note { font-size: 0.85rem; }
+
+  /* GDS/TDS 탭 */
+  .sec-title { font-size: 0.95rem; }
+  .g-row label { font-size: 0.92rem; }
+  .g-sub { font-size: 0.82rem; }
+  .gi-wrap input { font-size: 1rem; }
+  .stress-note { font-size: 0.82rem; }
+  .ratio-label { font-size: 0.95rem; }
+  .ratio-val { font-size: 1.3rem; }
+  .td-note { font-size: 0.85rem; }
+
+  /* Debt/Income/Fixed 탭 테이블 */
+  .debt-table { font-size: 0.92rem; }
+  .debt-table th { font-size: 0.85rem; }
+  .debt-table td { font-size: 0.9rem; }
+  .debt-table input { font-size: 1.05rem; font-weight: 700; color: #1e3a5f; padding: 9px 10px; }
+  .debt-total-label { font-size: 0.95rem; }
+  .debt-total-val { font-size: 1.3rem; }
+  .income-table { font-size: 0.92rem; }
+  .income-table th { font-size: 0.85rem; }
+  .income-table input { font-size: 1.05rem; font-weight: 700; color: #1e3a5f; padding: 9px 10px; }
+  .inc-box-label { font-size: 0.88rem; }
+  .inc-box-val { font-size: 1.3rem; }
+  .fixed-table { font-size: 0.92rem; }
+  .fixed-table th { font-size: 0.85rem; }
+  .fixed-table input { font-size: 0.95rem; }
+  .fixed-total-label { font-size: 0.95rem; }
+  .fixed-total-val { font-size: 1.3rem; }
+
+  /* 최소 다운페이 탭 */
+  .mindown-input-box .field-label { font-size: 0.95rem; }
+  .mindown-table { font-size: 0.92rem; }
+  .mindown-table th { font-size: 0.85rem; }
+  .mindown-table td { font-size: 0.9rem; padding: 10px 12px; }
+  .mindown-result-row { font-size: 0.92rem; }
+  .cmhc-box-header { font-size: 0.92rem; }
+  .cmhc-row { font-size: 0.9rem; }
+  .cmhc-row.total-row .r-val { font-size: 1.15rem; }
+  .mindown-note { font-size: 0.82rem; }
 }
 </style>
 </head>
@@ -414,8 +487,8 @@ select { padding: 9px 10px; appearance: none; background-image: url("data:image/
       <div>
         <div class="sec-title">Mortgage</div>
         <div class="g-row" style="margin-bottom:14px;">
-          <div><label>현재 연봉</label><div class="g-sub">Monthly: <span id="g-monthly-display">12,500</span></div></div>
-          <div class="gi-wrap"><span class="pre">$</span><input type="number" id="g-salary" value="150000" step="1000" oninput="calcGDS()"></div>
+          <div><label>현재 연봉</label><div class="g-sub" style="color:#f47920;">← INCOME 탭 자동연동 &nbsp;|&nbsp; Monthly: <span id="g-monthly-display">0</span></div></div>
+          <div class="gi-wrap"><span class="pre">$</span><input type="number" id="g-salary" value="0" step="1000" readonly style="background:#fff0e0;color:#f47920;font-weight:700;cursor:default;"></div>
         </div>
         <div class="divider"></div>
         <div class="mortgage-grid3" style="margin-top:12px;">
@@ -438,11 +511,21 @@ select { padding: 9px 10px; appearance: none; background-image: url("data:image/
             <option value="house">하우스</option>
           </select>
         </div>
-        <div class="g-row"><div><label>Maintain Fee</label><div class="g-sub" id="g-maintain-sub">월 콘도 fee의 50%</div></div><div class="gi-wrap"><span class="pre">$</span><input type="number" id="g-maintain" value="250" step="10" oninput="calcGDS()"></div></div>
+        <div style="display:grid;grid-template-columns:1fr 90px auto 90px;align-items:center;gap:6px;margin-bottom:10px;">
+          <div><label style="font-size:0.78rem;font-weight:600;color:#444;">Maintain Fee</label><div class="g-sub" id="g-maintain-sub">월 콘도 fee의 50%</div></div>
+          <div class="gi-wrap"><span class="pre">$</span><input type="number" id="g-maintain-raw" placeholder="500" step="10" oninput="applyMaintain50()" style="background:#fff7f0;"></div>
+          <span style="font-size:0.75rem;color:#aaa;white-space:nowrap;">×50%</span>
+          <div class="gi-wrap"><span class="pre">$</span><input type="number" id="g-maintain" value="250" step="10" oninput="calcGDS()" style="background:#f0f7ff;color:#1e3a5f;font-weight:700;"></div>
+        </div>
         <div class="g-row"><div><label>Heating</label><div class="g-sub">난방비</div></div><div class="gi-wrap"><span class="pre">$</span><input type="number" id="g-heating" value="100" step="10" oninput="calcGDS()"></div></div>
-        <div class="g-row"><div><label>Property Tax</label><div class="g-sub">재산세 (월간)</div></div><div class="gi-wrap"><span class="pre">$</span><input type="number" id="g-tax" value="250" step="10" oninput="calcGDS()"></div></div>
+        <div style="display:grid;grid-template-columns:1fr 130px auto 90px;align-items:center;gap:6px;margin-bottom:10px;">
+          <div><label style="font-size:0.78rem;font-weight:600;color:#444;">Property Tax</label><div class="g-sub">재산세 ÷12 = 월간</div></div>
+          <div class="gi-wrap"><span class="pre">$</span><input type="number" id="g-tax-annual" placeholder="연간" step="100" oninput="applyTaxDiv12()" style="background:#fff7f0;"></div>
+          <span style="font-size:0.75rem;color:#aaa;white-space:nowrap;">÷12</span>
+          <div class="gi-wrap"><span class="pre">$</span><input type="number" id="g-tax" value="250" step="10" oninput="calcGDS()" style="background:#f0f7ff;color:#1e3a5f;font-weight:700;"></div>
+        </div>
         <div class="sec-title" style="margin-top:14px;">그외 비용</div>
-        <div class="g-row"><div><label>Monthly Payment</label><div class="g-sub">Loan &amp; etc 부채</div></div><div class="gi-wrap"><span class="pre">$</span><input type="number" id="g-other" value="700" step="50" oninput="calcGDS()"></div></div>
+        <div class="g-row"><div><label>Monthly Payment</label><div class="g-sub" style="color:#f47920;">← DEBT 탭 자동연동</div></div><div class="gi-wrap"><span class="pre">$</span><input type="number" id="g-other" value="0" step="50" readonly style="background:#fff0e0;color:#f47920;font-weight:700;cursor:default;"></div></div>
         <div class="divider"></div>
         <div class="ratio-box"><span class="ratio-label">GDS Ratio 비율</span><span class="ratio-val" id="g-gds-val">—</span></div>
         <div class="ratio-box"><span class="ratio-label">TDS Ratio 비율</span><span class="ratio-val" id="g-tds-val">—</span></div>
@@ -482,16 +565,16 @@ select { padding: 9px 10px; appearance: none; background-image: url("data:image/
         <colgroup><col><col style="width:90px;"><col style="width:180px;"></colgroup>
         <thead><tr><th>항목</th><th style="text-align:right;">금액 ($)</th><th style="text-align:right;">월 납부액 ($)</th></tr></thead>
         <tbody>
-          <tr><td rowspan="2">Credit Card<br><span style="font-size:0.7rem;color:#999;">(내가 쓴 금액의 3%)</span></td><td><input type="number" id="cc-balance" value="4000" step="100" oninput="autoMonthly('cc-balance','cc-monthly');calcDebt()"></td><td><input type="number" id="cc-monthly" value="120" step="10" oninput="calcDebt()"></td></tr>
-          <tr><td><input type="number" id="cc-limit" value="5000" step="100" oninput="autoMonthly('cc-limit','cc-limit-m');calcDebt()"></td><td><input type="number" id="cc-limit-m" value="150" step="10" oninput="calcDebt()"></td></tr>
-          <tr><td>Personal Loan</td><td></td><td><input type="number" id="pl-monthly" placeholder="0" step="50" oninput="calcDebt()"></td></tr>
-          <tr><td>Auto Loan<br><span style="font-size:0.7rem;color:#999;">(월 나가는 금액)</span></td><td></td><td><input type="number" id="al-monthly" value="600" step="50" oninput="calcDebt()"></td></tr>
-          <tr><td>Secured LOC<br><span style="font-size:0.7rem;color:#999;">(할락)</span><br><span style="font-size:0.7rem;color:#999;">(받은 총금액)</span></td><td></td><td><input type="number" id="sloc-monthly" placeholder="0" step="50" oninput="calcDebt()"></td></tr>
+          <tr><td rowspan="2">Credit Card<br><span style="font-size:0.7rem;color:#999;">(내가 쓴 금액의 3%)</span></td><td><input type="number" id="cc-balance" value="0" step="100" oninput="autoMonthly('cc-balance','cc-monthly');calcDebt()"></td><td><input type="number" id="cc-monthly" value="0" step="10" oninput="calcDebt()"></td></tr>
+          <tr><td><input type="number" id="cc-limit" value="0" step="100" oninput="autoMonthly('cc-limit','cc-limit-m');calcDebt()"></td><td><input type="number" id="cc-limit-m" value="0" step="10" oninput="calcDebt()"></td></tr>
+          <tr><td>Personal Loan</td><td></td><td><input type="number" id="pl-monthly" value="0" step="50" oninput="calcDebt()"></td></tr>
+          <tr><td>Auto Loan<br><span style="font-size:0.7rem;color:#999;">(월 나가는 금액)</span></td><td></td><td><input type="number" id="al-monthly" value="0" step="50" oninput="calcDebt()"></td></tr>
+          <tr><td>Secured LOC<br><span style="font-size:0.7rem;color:#999;">(할락)</span><br><span style="font-size:0.7rem;color:#999;">(받은 총금액)</span></td><td></td><td><input type="number" id="sloc-monthly" value="0" step="50" oninput="calcDebt()"></td></tr>
           <tr><td>Unsecured LOC<br><span style="font-size:0.7rem;color:#999;">(개인라인)</span><br><span style="font-size:0.7rem;color:#999;">(총 받은금액에서 3%)</span></td><td><input type="number" id="uloc-limit" value="0" step="100" oninput="autoMonthly('uloc-limit','uloc-monthly');calcDebt()"></td><td><input type="number" id="uloc-monthly" value="0" step="50" oninput="calcDebt()"></td></tr>
-          <tr><td>Alimony<br><span style="font-size:0.7rem;color:#999;">(위자료)</span></td><td></td><td><input type="number" id="ali-monthly" placeholder="0" step="50" oninput="calcDebt()"></td></tr>
-          <tr><td>Child Support<br><span style="font-size:0.7rem;color:#999;">(양육비)</span></td><td></td><td><input type="number" id="cs-monthly" placeholder="0" step="50" oninput="calcDebt()"></td></tr>
-          <tr><td>OSAP<br><span style="font-size:0.7rem;color:#999;">(월 나가는 금액)</span></td><td></td><td><input type="number" id="osap-monthly" placeholder="0" step="50" oninput="calcDebt()"></td></tr>
-          <tr><td>Other<br><span style="font-size:0.7rem;color:#999;">(기타)</span></td><td></td><td><input type="number" id="oth-monthly" placeholder="0" step="50" oninput="calcDebt()"></td></tr>
+          <tr><td>Alimony<br><span style="font-size:0.7rem;color:#999;">(위자료)</span></td><td></td><td><input type="number" id="ali-monthly" value="0" step="50" oninput="calcDebt()"></td></tr>
+          <tr><td>Child Support<br><span style="font-size:0.7rem;color:#999;">(양육비)</span></td><td></td><td><input type="number" id="cs-monthly" value="0" step="50" oninput="calcDebt()"></td></tr>
+          <tr><td>OSAP<br><span style="font-size:0.7rem;color:#999;">(월 나가는 금액)</span></td><td></td><td><input type="number" id="osap-monthly" value="0" step="50" oninput="calcDebt()"></td></tr>
+          <tr><td>Other<br><span style="font-size:0.7rem;color:#999;">(기타)</span></td><td></td><td><input type="number" id="oth-monthly" value="0" step="50" oninput="calcDebt()"></td></tr>
         </tbody>
       </table>
       <div class="debt-total-box"><span class="debt-total-label">Total Monthly Debt</span><span class="debt-total-val" id="debt-total">$870</span></div>
@@ -503,21 +586,21 @@ select { padding: 9px 10px; appearance: none; background-image: url("data:image/
     <div class="income-wrap">
       <table class="income-table">
         <colgroup><col><col style="width:140px;"><col style="width:140px;"><col></colgroup>
-        <thead><tr><th>항목</th><th style="text-align:right;">시급/금액</th><th style="text-align:right;">근무시간</th><th style="text-align:right;">연간 합계 ($)</th></tr></thead>
+        <thead><tr><th>항목</th><th style="text-align:right;">시급/금액</th><th style="text-align:right;">근무시간</th><th style="text-align:right;">연간 합계</th></tr></thead>
         <tbody>
           <tr class="income-section-head"><td colspan="4">급여 소득</td></tr>
-          <tr><td>연봉 (시급)</td><td><input type="number" id="i-hourly" value="43" step="0.5" oninput="calcIncome()"></td><td><input type="number" id="i-hours" value="42.5" step="0.5" class="plain" oninput="calcIncome()"></td><td style="text-align:right;font-weight:700;color:#1e3a5f;" id="i-hourly-annual">93,925</td></tr>
+          <tr><td><span style="font-size:0.75rem;">연봉 (시급)</span></td><td><input type="number" id="i-hourly" value="0" step="0.5" oninput="calcIncome()"></td><td><input type="number" id="i-hours" value="0" step="0.5" class="plain" oninput="calcIncome()"></td><td style="text-align:right;font-weight:700;color:#1e3a5f;" id="i-hourly-annual">0</td></tr>
           <tr><td colspan="3" style="font-size:0.72rem;color:#888;padding:4px 8px;">주급</td><td></td></tr>
           <tr><td>weekly</td><td><input type="number" id="i-weekly" value="0" step="100" oninput="calcIncome()"></td><td></td><td style="text-align:right;font-weight:700;color:#1e3a5f;" id="i-weekly-annual">0</td></tr>
-          <tr><td>biweekly</td><td><input type="number" id="i-biweekly" value="6000" step="100" oninput="calcIncome()"></td><td></td><td style="text-align:right;font-weight:700;color:#1e3a5f;" id="i-biweekly-annual">156,000</td></tr>
+          <tr><td>biweekly</td><td><input type="number" id="i-biweekly" value="0" step="100" oninput="calcIncome()"></td><td></td><td style="text-align:right;font-weight:700;color:#1e3a5f;" id="i-biweekly-annual">0</td></tr>
           <tr><td>semi-monthly<br><span style="font-size:0.72rem;color:#999;">(한달에 2번)</span></td><td><input type="number" id="i-semimonthly" value="0" step="100" oninput="calcIncome()"></td><td></td><td style="text-align:right;font-weight:700;color:#1e3a5f;" id="i-semimonthly-annual">0</td></tr>
           <tr><td>monthly</td><td><input type="number" id="i-monthly-pay" value="0" step="100" oninput="calcIncome()"></td><td></td><td style="text-align:right;font-weight:700;color:#1e3a5f;" id="i-monthly-annual">0</td></tr>
-          <tr class="direct-income-row"><td>1년 인컴 직접입력</td><td colspan="2" style="font-size:0.75rem;color:#555;padding:6px 8px;">연봉을 직접 입력</td><td style="width:180px;"><input type="number" id="i-direct-annual" placeholder="0" step="1000" oninput="calcIncome()" style="width:100%;"></td></tr>
-          <tr style="background:#fff8f0;"><td style="font-weight:700;color:#1e3a5f;">년 인컴 TOTAL</td><td colspan="2" style="font-size:0.75rem;color:#888;">자동 합산</td><td style="width:180px;"><input type="number" id="i-manual-total" value="249925" step="1000" style="background:#ffede0;font-weight:700;width:100%;" oninput="calcIncome()"></td></tr>
+          <tr class="direct-income-row"><td>1년 인컴</td><td colspan="2" style="font-size:0.75rem;color:#555;padding:6px 8px;">연봉을 직접 입력</td><td style="width:180px;"><input type="number" id="i-direct-annual" placeholder="0" step="1000" oninput="calcIncome()" style="width:100%;"></td></tr>
+          <tr style="background:#fff8f0;"><td style="font-weight:700;color:#1e3a5f;">년 인컴 TOTAL</td><td colspan="2" style="font-size:0.75rem;color:#888;">자동 합산</td><td style="width:180px;"><input type="number" id="i-manual-total" value="0" step="1000" style="background:#ffede0;font-weight:700;width:100%;" oninput="calcIncome()"></td></tr>
           <tr><td colspan="4" style="font-size:0.72rem;color:#888;padding:4px 8px;">(weekly, biweekly, semi-monthly, monthly, yearly)</td></tr>
           <tr class="income-section-head"><td colspan="4">기타 소득 (Other Income)</td></tr>
           <tr><td>렌트인컴<br><span style="font-size:0.7rem;color:#999;">(렌트금액의 50%~80%인정)</span></td><td><input type="number" id="i-other1" value="0" step="100" oninput="calcIncome()"></td><td></td><td style="text-align:right;font-weight:700;color:#1e3a5f;" id="i-other1-annual">0</td></tr>
-          <tr><td>CCB</td><td><input type="number" id="i-ccb" value="372" step="10" oninput="calcIncome()"></td><td></td><td style="text-align:right;font-weight:700;color:#1e3a5f;" id="i-ccb-annual">4,464</td></tr>
+          <tr><td>CCB</td><td><input type="number" id="i-ccb" value="0" step="10" oninput="calcIncome()"></td><td></td><td style="text-align:right;font-weight:700;color:#1e3a5f;" id="i-ccb-annual">0</td></tr>
           <tr><td>other income</td><td><input type="number" id="i-other2" value="0" step="100" oninput="calcIncome()"></td><td></td><td style="text-align:right;font-weight:700;color:#1e3a5f;" id="i-other2-annual">0</td></tr>
           <tr style="background:#fff8f0;"><td colspan="3" style="font-weight:700;color:#1e3a5f;">OTHER TOTAL</td><td style="text-align:right;font-weight:700;color:#f47920;" id="i-other-total">4,464</td></tr>
           <tr style="background:#ffede0;"><td colspan="3" style="font-weight:800;color:#1e3a5f;font-size:0.9rem;">TOTAL</td><td style="text-align:right;font-weight:800;color:#f47920;font-size:0.9rem;" id="i-grand-total">254,389</td></tr>
@@ -958,6 +1041,9 @@ select { padding: 9px 10px; appearance: none; background-image: url("data:image/
     var total=v('cc-monthly')+v('cc-limit-m')+v('pl-monthly')+v('al-monthly')+
       v('sloc-monthly')+v('uloc-monthly')+v('ali-monthly')+v('cs-monthly')+v('osap-monthly')+v('oth-monthly');
     document.getElementById('debt-total').textContent=fmt(total);
+    // DEBT 탭 총합 → GDS 탭 Monthly Payment 자동 연동
+    document.getElementById('g-other').value=total>0?total:'';
+    calcGDS();
   }
 
   function calcIncome(){
@@ -978,6 +1064,9 @@ select { padding: 9px 10px; appearance: none; background-image: url("data:image/
     document.getElementById('i-grand-total').textContent=Math.round(grand).toLocaleString('en-CA');
     document.getElementById('i-sum-annual').textContent=fmt(grand);
     document.getElementById('i-sum-monthly').textContent=fmt(grand/12);
+    // INCOME 탭 TOTAL → GDS 탭 현재 연봉 자동 연동
+    document.getElementById('g-salary').value=grand>0?Math.round(grand):'';
+    calcGDS();
   }
 
   function calcFixed(){
@@ -1273,12 +1362,27 @@ select { padding: 9px 10px; appearance: none; background-image: url("data:image/
       house:      { maintain: 0,   heating: 100, tax: 400, sub: '해당 없음' }
     };
     var p = presets[type];
+    document.getElementById('g-maintain-raw').value = p.maintain > 0 ? p.maintain * 2 : '';
     document.getElementById('g-maintain').value = p.maintain;
     document.getElementById('g-heating').value  = p.heating;
+    document.getElementById('g-tax-annual').value = p.tax > 0 ? p.tax * 12 : '';
     document.getElementById('g-tax').value      = p.tax;
     document.getElementById('g-maintain-sub').textContent = p.sub;
     calcGDS();
   }
+  function applyTaxDiv12() {
+    var annual = parseFloat(document.getElementById('g-tax-annual').value) || 0;
+    document.getElementById('g-tax').value = annual > 0 ? Math.round(annual / 12) : '';
+    calcGDS();
+  }
+  window.applyTaxDiv12 = applyTaxDiv12;
+
+  function applyMaintain50() {
+    var raw = parseFloat(document.getElementById('g-maintain-raw').value) || 0;
+    document.getElementById('g-maintain').value = raw > 0 ? Math.round(raw * 0.5) : '';
+    calcGDS();
+  }
+  window.applyMaintain50 = applyMaintain50;
   window.applyPropType = applyPropType;
   function calcSqft() {
     var sqft  = parseFloat(document.getElementById('sqft-size').value) || 0;
@@ -1299,7 +1403,7 @@ select { padding: 9px 10px; appearance: none; background-image: url("data:image/
   updateCities(); updateMortgage();
   document.getElementById('province').addEventListener('change',updateCities);
   document.getElementById('amort-preset').addEventListener('change',applyAmortPreset);
-  calcGDS(); calcDebt(); calcIncome(); calcFixed(); calcMinDown(); calcReverse();
+  calcDebt(); calcIncome(); calcFixed(); calcMinDown(); calcReverse();
 })();
 </script>
 </body>
